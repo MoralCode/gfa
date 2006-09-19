@@ -1,0 +1,36 @@
+gfa - GTK+ fast address
+gfa is a small and fast address book written in C and GTK+2. It uses sqlite as backend for the addresses.
+
+
+Status
+The current release is a beta release, but it is stable. It is ready for daily usage, no crashes appears in the tests. No data loss or something similar happens. Nevertheless there can be bugs, so be warned.
+
+Using
+I think it's not necessary to write here how to use gfa. It's self-explainig. If you wan't to create a new contact press 'New', fill out the fields and press 'Save'. If you change anything in the fields or the image, you must press 'Save' to save the changes, otherwise the changes will be lost, but I think that's clear. 'Delete' will delete the contact from your list. There will be a question if you really want to delete for accidently clicking. If you don't like the selected image anymore, than you can change it to the default icon by clicking 'Use default icon' in the file dialog. And 'Quit' quits gfa. That's all.
+
+Requirements
+You will need:
+
+    * GTK+2 >= 2.6.0
+    * sqlite3 >= 3.0
+
+
+Installation
+Download the package from a sourceforge.net-mirror, extract the archive, change to the newly created directory (usually gfa-x.x) and type configure, make and as root make install. Start gfa with gfa.
+
+ToDo
+This is a random summary of things, that I want to implement in further versions:
+
+    * more input fields (such as business phone, etc.)
+    * groups
+    * automatically resizing the image, if it doesn't fit
+    * send email with your favourite email client
+    * preferences dialog
+    * alphabetic order for newly created contacts
+    * code cleaning
+
+Known issues
+
+    * a newly created contact won't be insert in alphabetic order, you must restart gfa to sort the ComboBox
+    * send button don't work
+    * you should use a 110x160 px image for icon, otherwise gfa center the image and shows only a part of the image
