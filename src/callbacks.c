@@ -363,11 +363,13 @@ on_savebutton_clicked                  (GtkButton       *button,
 		if (rc == 0){
 			rc = sqlite3_exec(db, "select * from gfa;", callback_insert, button, &zErrMsg);
 			sprintf(query, "insert into gfa values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');", lname,fname,str,n,z,c,p,m,e,img,b,w,i,y,ms,wp,wm,we); 
+			rc = sqlite3_exec(db, query, NULL, 0, &zErrMsg);
+			rc = sqlite3_exec(db, "select Last_Name,First_Name from gfa ORDER BY Last_Name,First_Name ASC;", callback, button, &zErrMsg);
+
 		}else{
 			sprintf(query, "UPDATE gfa SET Last_Name = '%s',First_Name = '%s',Street = '%s',No = '%s',Zip = '%s',City = '%s',Phone = '%s',Mobile = '%s', Email = '%s', Image = '%s', Birth = '%s', Web ='%s', Icq = '%s', Yahoo = '%s', Msn = '%s', Workphone = '%s', Workmobile = '%s', Workemail = '%s' WHERE Last_Name = '%s' AND First_Name = '%s';", lname,fname,str,n,z,c,p,m,e,img,b,w,i,y,ms,wp,wm,we,lname,fname);
+			rc = sqlite3_exec(db, query, NULL, 0, &zErrMsg);
 		}	
-		rc = sqlite3_exec(db, query, NULL, 0, &zErrMsg);
-		rc = sqlite3_exec(db, "select Last_Name,First_Name from gfa ORDER BY Last_Name,First_Name ASC;", callback, button, &zErrMsg);
 		sqlite3_close(db);
 	}
 }
