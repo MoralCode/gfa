@@ -21,16 +21,13 @@ Download the package from a sourceforge.net-mirror, extract the archive, change 
 ToDo
 This is a random summary of things, that I want to implement in further versions:
 
-    * more input fields (such as business phone, etc.)
     * groups
     * automatically resizing the image, if it doesn't fit
     * send email with your favourite email client
     * preferences dialog
-    * alphabetic order for newly created contacts
     * code cleaning
 
 Known issues
 
-    * a newly created contact won't be insert in alphabetic order, you must restart gfa to sort the ComboBox
     * send button don't work
     * you should use a 110x160 px image for icon, otherwise gfa center the image and shows only a part of the image

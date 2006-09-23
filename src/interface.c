@@ -63,11 +63,33 @@ create_mainwindow (void)
   GtkWidget *mobileentry;
   GtkWidget *label9;
   GtkWidget *emailentry;
-  GtkWidget *label10;
   GtkWidget *emailsend;
-  GtkWidget *label6;
-  GtkWidget *label3;
   GtkWidget *url;
+  GtkWidget *label6;
+  GtkWidget *label10;
+  GtkWidget *label3;
+  GtkWidget *expander;
+  GtkWidget *fixed3;
+  GtkWidget *webentry;
+  GtkWidget *icqentry;
+  GtkWidget *yahooentry;
+  GtkWidget *msnentry;
+  GtkWidget *birthdateentry;
+  GtkWidget *label18;
+  GtkWidget *label19;
+  GtkWidget *label20;
+  GtkWidget *datebutton;
+  GtkWidget *image4;
+  GtkWidget *hseparator3;
+  GtkWidget *workphoneentry;
+  GtkWidget *workmobileentry;
+  GtkWidget *workemailentry;
+  GtkWidget *label27;
+  GtkWidget *label28;
+  GtkWidget *label29;
+  GtkWidget *label17;
+  GtkWidget *label26;
+  GtkWidget *label25;
   GtkWidget *hseparator1;
   GtkWidget *hbuttonbox1;
   GtkWidget *newbutton;
@@ -82,7 +104,7 @@ create_mainwindow (void)
   accel_group = gtk_accel_group_new ();
 
   mainwindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_widget_set_size_request (mainwindow, 611, 274);
+  gtk_widget_set_size_request (mainwindow, 611, -1);
   gtk_window_set_title (GTK_WINDOW (mainwindow), "gfa");
   gtk_window_set_resizable (GTK_WINDOW (mainwindow), FALSE);
   gtk_window_set_icon_name (GTK_WINDOW (mainwindow), "stock_book_red");
@@ -150,7 +172,7 @@ create_mainwindow (void)
   buddy_button = gtk_button_new ();
   gtk_widget_show (buddy_button);
   gtk_box_pack_start (GTK_BOX (hbox1), buddy_button, FALSE, FALSE, 0);
-  gtk_widget_set_size_request (buddy_button, 123, -1);
+  gtk_widget_set_size_request (buddy_button, 123, 141);
   gtk_container_set_border_width (GTK_CONTAINER (buddy_button), 3);
 
   buddy = create_pixmap (mainwindow, "person.png");
@@ -236,31 +258,139 @@ create_mainwindow (void)
   gtk_fixed_put (GTK_FIXED (fixed1), emailentry, 80, 144);
   gtk_widget_set_size_request (emailentry, 332, 27);
 
-  label10 = gtk_label_new ("email:");
-  gtk_widget_show (label10);
-  gtk_fixed_put (GTK_FIXED (fixed1), label10, 32, 144);
-  gtk_widget_set_size_request (label10, 48, 24);
-
   emailsend = gtk_button_new_with_mnemonic ("send");
   gtk_widget_show (emailsend);
   gtk_fixed_put (GTK_FIXED (fixed1), emailsend, 416, 144);
   gtk_widget_set_size_request (emailsend, 64, 27);
   gtk_tooltips_set_tip (tooltips, emailsend, "Send an email to your contact with your mail client.", NULL);
 
+  url = gtk_label_new ("label14");
+  gtk_fixed_put (GTK_FIXED (fixed1), url, 88, 24);
+  gtk_widget_set_size_request (url, 46, 17);
+  gtk_widget_set_sensitive (url, FALSE);
+
   label6 = gtk_label_new ("zip:");
   gtk_widget_show (label6);
   gtk_fixed_put (GTK_FIXED (fixed1), label6, 40, 80);
   gtk_widget_set_size_request (label6, 48, 24);
+
+  label10 = gtk_label_new ("email:");
+  gtk_widget_show (label10);
+  gtk_fixed_put (GTK_FIXED (fixed1), label10, 32, 144);
+  gtk_widget_set_size_request (label10, 48, 24);
 
   label3 = gtk_label_new ("last name:");
   gtk_widget_show (label3);
   gtk_fixed_put (GTK_FIXED (fixed1), label3, 8, 16);
   gtk_widget_set_size_request (label3, 72, 24);
 
-  url = gtk_label_new ("label14");
-  gtk_fixed_put (GTK_FIXED (fixed1), url, 8, 0);
-  gtk_widget_set_size_request (url, 46, 17);
-  gtk_widget_set_sensitive (url, FALSE);
+  expander = gtk_expander_new (NULL);
+  gtk_widget_show (expander);
+  gtk_box_pack_start (GTK_BOX (vbox1), expander, TRUE, TRUE, 0);
+
+  fixed3 = gtk_fixed_new ();
+  gtk_widget_show (fixed3);
+  gtk_container_add (GTK_CONTAINER (expander), fixed3);
+  gtk_widget_set_size_request (fixed3, -1, 182);
+
+  webentry = gtk_entry_new ();
+  gtk_widget_show (webentry);
+  gtk_fixed_put (GTK_FIXED (fixed3), webentry, 80, 48);
+  gtk_widget_set_size_request (webentry, 215, 26);
+
+  icqentry = gtk_entry_new ();
+  gtk_widget_show (icqentry);
+  gtk_fixed_put (GTK_FIXED (fixed3), icqentry, 80, 80);
+  gtk_widget_set_size_request (icqentry, 215, 26);
+
+  yahooentry = gtk_entry_new ();
+  gtk_widget_show (yahooentry);
+  gtk_fixed_put (GTK_FIXED (fixed3), yahooentry, 80, 112);
+  gtk_widget_set_size_request (yahooentry, 215, 26);
+
+  msnentry = gtk_entry_new ();
+  gtk_widget_show (msnentry);
+  gtk_fixed_put (GTK_FIXED (fixed3), msnentry, 80, 144);
+  gtk_widget_set_size_request (msnentry, 215, 26);
+
+  birthdateentry = gtk_entry_new ();
+  gtk_widget_show (birthdateentry);
+  gtk_fixed_put (GTK_FIXED (fixed3), birthdateentry, 80, 16);
+  gtk_widget_set_size_request (birthdateentry, 184, 26);
+
+  label18 = gtk_label_new (" icq:");
+  gtk_widget_show (label18);
+  gtk_fixed_put (GTK_FIXED (fixed3), label18, 32, 80);
+  gtk_widget_set_size_request (label18, 56, 24);
+
+  label19 = gtk_label_new (" yahoo:");
+  gtk_widget_show (label19);
+  gtk_fixed_put (GTK_FIXED (fixed3), label19, 22, 112);
+  gtk_widget_set_size_request (label19, 56, 24);
+
+  label20 = gtk_label_new (" msn:");
+  gtk_widget_show (label20);
+  gtk_fixed_put (GTK_FIXED (fixed3), label20, 28, 144);
+  gtk_widget_set_size_request (label20, 56, 24);
+
+  datebutton = gtk_button_new ();
+  gtk_widget_show (datebutton);
+  gtk_fixed_put (GTK_FIXED (fixed3), datebutton, 264, 16);
+  gtk_widget_set_size_request (datebutton, 32, 26);
+
+  image4 = gtk_image_new_from_icon_name ("stock_form-date-field", GTK_ICON_SIZE_BUTTON);
+  gtk_image_set_pixel_size (image4, 1);
+  gtk_widget_show (image4);
+  gtk_container_add (GTK_CONTAINER (datebutton), image4);
+
+  hseparator3 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator3);
+  gtk_fixed_put (GTK_FIXED (fixed3), hseparator3, 8, 0);
+  gtk_widget_set_size_request (hseparator3, 592, 16);
+
+  workphoneentry = gtk_entry_new ();
+  gtk_widget_show (workphoneentry);
+  gtk_fixed_put (GTK_FIXED (fixed3), workphoneentry, 388, 16);
+  gtk_widget_set_size_request (workphoneentry, 215, 26);
+
+  workmobileentry = gtk_entry_new ();
+  gtk_widget_show (workmobileentry);
+  gtk_fixed_put (GTK_FIXED (fixed3), workmobileentry, 388, 48);
+  gtk_widget_set_size_request (workmobileentry, 215, 26);
+
+  workemailentry = gtk_entry_new ();
+  gtk_widget_show (workemailentry);
+  gtk_fixed_put (GTK_FIXED (fixed3), workemailentry, 388, 80);
+  gtk_widget_set_size_request (workemailentry, 215, 26);
+
+  label27 = gtk_label_new (" work phone:");
+  gtk_widget_show (label27);
+  gtk_fixed_put (GTK_FIXED (fixed3), label27, 294, 16);
+  gtk_widget_set_size_request (label27, 96, 24);
+
+  label28 = gtk_label_new (" work mobile:");
+  gtk_widget_show (label28);
+  gtk_fixed_put (GTK_FIXED (fixed3), label28, 294, 48);
+  gtk_widget_set_size_request (label28, 96, 24);
+
+  label29 = gtk_label_new (" work email:");
+  gtk_widget_show (label29);
+  gtk_fixed_put (GTK_FIXED (fixed3), label29, 302, 80);
+  gtk_widget_set_size_request (label29, 88, 24);
+
+  label17 = gtk_label_new (" web:");
+  gtk_widget_show (label17);
+  gtk_fixed_put (GTK_FIXED (fixed3), label17, 37, 40);
+  gtk_widget_set_size_request (label17, 39, 38);
+
+  label26 = gtk_label_new (" birthday:");
+  gtk_widget_show (label26);
+  gtk_fixed_put (GTK_FIXED (fixed3), label26, 8, 16);
+  gtk_widget_set_size_request (label26, 72, 24);
+
+  label25 = gtk_label_new ("more fields");
+  gtk_widget_show (label25);
+  gtk_expander_set_label_widget (GTK_EXPANDER (expander), label25);
 
   hseparator1 = gtk_hseparator_new ();
   gtk_widget_show (hseparator1);
@@ -321,6 +451,12 @@ create_mainwindow (void)
   g_signal_connect ((gpointer) emailsend, "clicked",
                     G_CALLBACK (on_emailsend_clicked),
                     NULL);
+  g_signal_connect ((gpointer) expander, "notify::expanded",
+                    G_CALLBACK (expander_callback),
+                    NULL);
+  g_signal_connect ((gpointer) datebutton, "clicked",
+                    G_CALLBACK (on_datebutton_clicked),
+                    NULL);
   g_signal_connect ((gpointer) newbutton, "clicked",
                     G_CALLBACK (on_newbutton_clicked),
                     NULL);
@@ -369,11 +505,33 @@ create_mainwindow (void)
   GLADE_HOOKUP_OBJECT (mainwindow, mobileentry, "mobileentry");
   GLADE_HOOKUP_OBJECT (mainwindow, label9, "label9");
   GLADE_HOOKUP_OBJECT (mainwindow, emailentry, "emailentry");
-  GLADE_HOOKUP_OBJECT (mainwindow, label10, "label10");
   GLADE_HOOKUP_OBJECT (mainwindow, emailsend, "emailsend");
-  GLADE_HOOKUP_OBJECT (mainwindow, label6, "label6");
-  GLADE_HOOKUP_OBJECT (mainwindow, label3, "label3");
   GLADE_HOOKUP_OBJECT (mainwindow, url, "url");
+  GLADE_HOOKUP_OBJECT (mainwindow, label6, "label6");
+  GLADE_HOOKUP_OBJECT (mainwindow, label10, "label10");
+  GLADE_HOOKUP_OBJECT (mainwindow, label3, "label3");
+  GLADE_HOOKUP_OBJECT (mainwindow, expander, "expander");
+  GLADE_HOOKUP_OBJECT (mainwindow, fixed3, "fixed3");
+  GLADE_HOOKUP_OBJECT (mainwindow, webentry, "webentry");
+  GLADE_HOOKUP_OBJECT (mainwindow, icqentry, "icqentry");
+  GLADE_HOOKUP_OBJECT (mainwindow, yahooentry, "yahooentry");
+  GLADE_HOOKUP_OBJECT (mainwindow, msnentry, "msnentry");
+  GLADE_HOOKUP_OBJECT (mainwindow, birthdateentry, "birthdateentry");
+  GLADE_HOOKUP_OBJECT (mainwindow, label18, "label18");
+  GLADE_HOOKUP_OBJECT (mainwindow, label19, "label19");
+  GLADE_HOOKUP_OBJECT (mainwindow, label20, "label20");
+  GLADE_HOOKUP_OBJECT (mainwindow, datebutton, "datebutton");
+  GLADE_HOOKUP_OBJECT (mainwindow, image4, "image4");
+  GLADE_HOOKUP_OBJECT (mainwindow, hseparator3, "hseparator3");
+  GLADE_HOOKUP_OBJECT (mainwindow, workphoneentry, "workphoneentry");
+  GLADE_HOOKUP_OBJECT (mainwindow, workmobileentry, "workmobileentry");
+  GLADE_HOOKUP_OBJECT (mainwindow, workemailentry, "workemailentry");
+  GLADE_HOOKUP_OBJECT (mainwindow, label27, "label27");
+  GLADE_HOOKUP_OBJECT (mainwindow, label28, "label28");
+  GLADE_HOOKUP_OBJECT (mainwindow, label29, "label29");
+  GLADE_HOOKUP_OBJECT (mainwindow, label17, "label17");
+  GLADE_HOOKUP_OBJECT (mainwindow, label26, "label26");
+  GLADE_HOOKUP_OBJECT (mainwindow, label25, "label25");
   GLADE_HOOKUP_OBJECT (mainwindow, hseparator1, "hseparator1");
   GLADE_HOOKUP_OBJECT (mainwindow, hbuttonbox1, "hbuttonbox1");
   GLADE_HOOKUP_OBJECT (mainwindow, newbutton, "newbutton");
@@ -625,5 +783,47 @@ create_filechooserdialog (void)
 
   gtk_widget_grab_default (button3);
   return filechooserdialog;
+}
+
+GtkWidget*
+create_caldialog (void)
+{
+  GtkWidget *caldialog;
+  GtkWidget *dialog_vbox5;
+  GtkWidget *calendar;
+  GtkWidget *dialog_action_area5;
+
+  caldialog = gtk_dialog_new ();
+  gtk_window_set_title (GTK_WINDOW (caldialog), "Double-click on date to choose");
+  gtk_window_set_position (GTK_WINDOW (caldialog), GTK_WIN_POS_MOUSE);
+  gtk_window_set_modal (GTK_WINDOW (caldialog), TRUE);
+  gtk_window_set_resizable (GTK_WINDOW (caldialog), FALSE);
+  gtk_window_set_icon_name (GTK_WINDOW (caldialog), "stock_book_red");
+  gtk_window_set_decorated (GTK_WINDOW (caldialog), FALSE);
+  gtk_window_set_type_hint (GTK_WINDOW (caldialog), GDK_WINDOW_TYPE_HINT_DIALOG);
+  gtk_window_set_gravity (GTK_WINDOW (caldialog), GDK_GRAVITY_CENTER);
+
+  dialog_vbox5 = GTK_DIALOG (caldialog)->vbox;
+  gtk_widget_show (dialog_vbox5);
+
+  calendar = gtk_calendar_new ();
+  gtk_widget_show (calendar);
+  gtk_box_pack_start (GTK_BOX (dialog_vbox5), calendar, TRUE, TRUE, 0);
+  gtk_calendar_display_options (GTK_CALENDAR (calendar),
+                                GTK_CALENDAR_SHOW_HEADING
+                                | GTK_CALENDAR_SHOW_DAY_NAMES
+                                | GTK_CALENDAR_SHOW_WEEK_NUMBERS);
+
+  dialog_action_area5 = GTK_DIALOG (caldialog)->action_area;
+  gtk_widget_show (dialog_action_area5);
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area5), GTK_BUTTONBOX_END);
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (caldialog, caldialog, "caldialog");
+  GLADE_HOOKUP_OBJECT_NO_REF (caldialog, dialog_vbox5, "dialog_vbox5");
+  GLADE_HOOKUP_OBJECT (caldialog, calendar, "calendar");
+  GLADE_HOOKUP_OBJECT_NO_REF (caldialog, dialog_action_area5, "dialog_action_area5");
+
+  return caldialog;
 }
 

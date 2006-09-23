@@ -113,3 +113,17 @@ on_quitbutton_clicked                  (GtkButton       *button,
 void
 on_buddy_button_clicked                (GtkButton       *button,
                                         gpointer         user_data);
+
+void
+expander_callback (GObject    *object,
+                   GParamSpec *param_spec,
+                   gpointer    user_data);
+
+
+void
+on_datebutton_clicked                  (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_calendar_day_selected_double_click  (GtkCalendar     *calendar,
+                                        gpointer         user_data);

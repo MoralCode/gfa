@@ -53,6 +53,21 @@ static int callback(void *mainwindow, int argc, char **argv, char **azColName)
   return 0;
 }
 
+
+static int callback_insert(void *button, int argc, char **argv, char **azColName)
+{
+  GtkWidget* btn = (GtkWidget*) button;
+  GtkComboBox* combo = lookup_widget(btn, "addresscombobox");
+
+  int i;
+  for(i=0;i<argc;i++)
+  {
+	  gtk_combo_box_remove_text (combo, i);
+  }
+  return 0;
+}
+
+
 static int del_file_callback(void *unused, int argc, char **argv, char **azColName)
 {
  
@@ -78,6 +93,26 @@ static int check_insert(void *unused, int argc, char **argv, char **azColName)
   return 0;
 }
 
+static int oldcheck(void *db, int argc, char **argv, char **azColName)
+{
+  if (argc < 17)
+  {
+	  sqlite3* database = (sqlite3*)db;
+	  char *zErrMsg = 0;
+	  sqlite3_exec(db,"alter table gfa add column Birth char(30) DEFAULT '';", NULL, 0, &zErrMsg);
+	  sqlite3_exec(db,"alter table gfa add column Web char(200) DEFAULT '';", NULL, 0, &zErrMsg);
+	  sqlite3_exec(db,"alter table gfa add column Icq char(20) DEFAULT '';", NULL, 0, &zErrMsg);
+	  sqlite3_exec(db,"alter table gfa add column Yahoo char(20) DEFAULT '';", NULL, 0, &zErrMsg);
+	  sqlite3_exec(db,"alter table gfa add column Msn char(50) DEFAULT '';", NULL, 0, &zErrMsg);
+	  sqlite3_exec(db,"alter table gfa add column Workphone char(30) DEFAULT '';", NULL, 0, &zErrMsg);
+	  sqlite3_exec(db,"alter table gfa add column Workmobile char(30) DEFAULT '';", NULL, 0, &zErrMsg);
+	  sqlite3_exec(db,"alter table gfa add column Workemail char(200) DEFAULT '';", NULL, 0, &zErrMsg);
+  }
+  return 0;
+}
+
+
+
 
 static int combo_active(void *combobox, int argc, char **argv, char **azColName)
 {
@@ -94,6 +129,14 @@ static int combo_active(void *combobox, int argc, char **argv, char **azColName)
   GtkEntry* email = lookup_widget(btn, "emailentry");
   GtkLabel* label = lookup_widget(btn, "url");
   GtkImage* image = lookup_widget(btn, "buddy");
+  GtkEntry* birth = lookup_widget(btn, "birthdateentry");
+  GtkEntry* web = lookup_widget(btn, "webentry");
+  GtkEntry* icq = lookup_widget(btn, "icqentry");
+  GtkEntry* yahoo = lookup_widget(btn, "yahooentry");
+  GtkEntry* msn = lookup_widget(btn, "msnentry");
+  GtkEntry* workphone = lookup_widget(btn, "workphoneentry");
+  GtkEntry* workmobile = lookup_widget(btn, "workmobileentry");
+  GtkEntry* workemail = lookup_widget(btn, "workemailentry");
 
   int i;
   char entrytext[1024];
@@ -145,6 +188,38 @@ static int combo_active(void *combobox, int argc, char **argv, char **azColName)
 			gtk_label_set_text(label,"/usr/share/gfa/pixmaps/person.png");
 		}
 	  }
+	  if(strcmp(azColName[i],"Birth") == 0)
+	  {
+		gtk_entry_set_text(birth,argv[i]);
+	  }
+	  if(strcmp(azColName[i],"Web") == 0)
+	  {
+		gtk_entry_set_text(web,argv[i]);
+	  }
+	  if(strcmp(azColName[i],"Icq") == 0)
+	  {
+		gtk_entry_set_text(icq,argv[i]);
+	  }
+	  if(strcmp(azColName[i],"Yahoo") == 0)
+	  {
+		gtk_entry_set_text(yahoo,argv[i]);
+	  }
+	  if(strcmp(azColName[i],"Msn") == 0)
+	  {
+		gtk_entry_set_text(msn,argv[i]);
+	  }
+	  if(strcmp(azColName[i],"Workphone") == 0)
+	  {
+		gtk_entry_set_text(workphone,argv[i]);
+	  }
+	  if(strcmp(azColName[i],"Workmobile") == 0)
+	  {
+		gtk_entry_set_text(workmobile,argv[i]);
+	  }
+	  if(strcmp(azColName[i],"Workemail") == 0)
+	  {
+		gtk_entry_set_text(workemail,argv[i]);
+	  }
   }
   return 0;
 }
@@ -162,6 +237,15 @@ on_addresscombobox_changed             (GtkComboBox     *combobox,
 	GtkEntry* phone = lookup_widget(combobox, "phoneentry");
 	GtkEntry* mobile = lookup_widget(combobox, "mobileentry");
 	GtkEntry* email = lookup_widget(combobox, "emailentry");
+	GtkEntry* birth = lookup_widget(combobox, "birthdateentry");
+	GtkEntry* web = lookup_widget(combobox, "webentry");
+	GtkEntry* icq = lookup_widget(combobox, "icqentry");
+	GtkEntry* yahoo = lookup_widget(combobox, "yahooentry");
+	GtkEntry* msn = lookup_widget(combobox, "msnentry");
+	GtkEntry* workphone = lookup_widget(combobox, "workphoneentry");
+	GtkEntry* workmobile = lookup_widget(combobox, "workmobileentry");
+	GtkEntry* workemail = lookup_widget(combobox, "workemailentry");
+
 
 	char* text = gtk_combo_box_get_active_text(combobox);
 	char div[] = ",";
@@ -219,6 +303,15 @@ on_savebutton_clicked                  (GtkButton       *button,
 	GtkEntry* mobile = lookup_widget(button, "mobileentry");
 	GtkEntry* email = lookup_widget(button, "emailentry");
 	GtkLabel* label = lookup_widget(button, "url");
+	GtkEntry* birth = lookup_widget(button, "birthdateentry");
+	GtkEntry* web = lookup_widget(button, "webentry");
+	GtkEntry* icq = lookup_widget(button, "icqentry");
+	GtkEntry* yahoo = lookup_widget(button, "yahooentry");
+	GtkEntry* msn = lookup_widget(button, "msnentry");
+	GtkEntry* workphone = lookup_widget(button, "workphoneentry");
+	GtkEntry* workmobile = lookup_widget(button, "workmobileentry");
+	GtkEntry* workemail = lookup_widget(button, "workemailentry");
+	
 
 	const char* lname = gtk_entry_get_text(lastname);
 	const char* fname = gtk_entry_get_text(firstname);
@@ -230,6 +323,14 @@ on_savebutton_clicked                  (GtkButton       *button,
 	const char* m = gtk_entry_get_text(mobile);
 	const char* e = gtk_entry_get_text(email);
 	const char* u = gtk_label_get_text(label);
+	const char* b = gtk_entry_get_text(birth);
+	const char* w = gtk_entry_get_text(web);
+	const char* i = gtk_entry_get_text(icq);
+	const char* y = gtk_entry_get_text(yahoo);
+	const char* ms = gtk_entry_get_text(msn);
+	const char* wp = gtk_entry_get_text(workphone);
+	const char* wm = gtk_entry_get_text(workmobile);
+	const char* we = gtk_entry_get_text(workemail);
 
 	if (strlen(lname) == 0 || strlen(fname) == 0)
 	{
@@ -241,7 +342,7 @@ on_savebutton_clicked                  (GtkButton       *button,
 
 		char* copy[1024];
 		sprintf(copy,"cp -f '%s' '%s'",u, path);
-		system(copy);
+		printf("%s\n",copy);//system(copy);
 
 		char* imagefile = strtok(u,"/");
 		char* temp;
@@ -260,17 +361,13 @@ on_savebutton_clicked                  (GtkButton       *button,
 		char* query[1024];
 
 		if (rc == 0){
-			sprintf(query, "insert into gfa values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');", lname,fname,str,n,z,c,p,m,e,img); 
-		
-			GtkComboBox* combo = lookup_widget(button, "addresscombobox");
-			char* insert[1024];
-			sprintf(insert, "%s, %s", lname,fname);
-			gtk_combo_box_append_text(combo,insert);
+			rc = sqlite3_exec(db, "select * from gfa;", callback_insert, button, &zErrMsg);
+			sprintf(query, "insert into gfa values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');", lname,fname,str,n,z,c,p,m,e,img,b,w,i,y,ms,wp,wm,we); 
 		}else{
-			sprintf(query, "UPDATE gfa SET Last_Name = '%s',First_Name = '%s',Street = '%s',No = '%s',Zip = '%s',City = '%s',Phone = '%s',Mobile = '%s', Email = '%s', Image = '%s' WHERE Last_Name = '%s' AND First_Name = '%s';", lname,fname,str,n,z,c,p,m,e,img,lname,fname);
-
+			sprintf(query, "UPDATE gfa SET Last_Name = '%s',First_Name = '%s',Street = '%s',No = '%s',Zip = '%s',City = '%s',Phone = '%s',Mobile = '%s', Email = '%s', Image = '%s', Birth = '%s', Web ='%s', Icq = '%s', Yahoo = '%s', Msn = '%s', Workphone = '%s', Workmobile = '%s', Workemail = '%s' WHERE Last_Name = '%s' AND First_Name = '%s';", lname,fname,str,n,z,c,p,m,e,img,b,w,i,y,ms,wp,wm,we,lname,fname);
 		}	
-		rc = sqlite3_exec(db, query, callback, button, &zErrMsg);
+		rc = sqlite3_exec(db, query, NULL, 0, &zErrMsg);
+		rc = sqlite3_exec(db, "select Last_Name,First_Name from gfa ORDER BY Last_Name,First_Name ASC;", callback, button, &zErrMsg);
 		sqlite3_close(db);
 	}
 }
@@ -296,8 +393,9 @@ on_mainwindow_realize                  (GtkWidget       *widget,
 
 
 	rc = sqlite3_open(dbfile,&db);
-	rc = sqlite3_exec(db, "CREATE TABLE IF NOT EXISTS gfa(Last_Name char(50), First_Name char(50), Street char(100), No char(10), Zip char(10), City char(50), Phone char(30), Mobile char(30), Email char(200), Image char(1024)) ;", NULL, 0, &zErrMsg);
+	rc = sqlite3_exec(db, "CREATE TABLE IF NOT EXISTS gfa(Last_Name char(50), First_Name char(50), Street char(100), No char(10), Zip char(10), City char(50), Phone char(30), Mobile char(30), Email char(200), Image char(1024), Birth char(30), Web char(200), Icq char(20), Yahoo char(20), Msn char(50), Workphone char(30), Workmobile char(30), Workemail char(200)) ;", NULL, 0, &zErrMsg);
 
+	rc = sqlite3_exec(db, "SELECT * FROM gfa;",oldcheck,db,&zErrMsg);
 
 	rc = sqlite3_exec(db, "select Last_Name,First_Name from gfa ORDER BY Last_Name,First_Name ASC;", callback, widget, &zErrMsg);
 	sqlite3_close(db);
@@ -367,9 +465,15 @@ on_deletebutton_clicked                (GtkButton       *button,
 		GtkEntry* email = lookup_widget(button, "emailentry");
 		GtkLabel* label = lookup_widget(button, "url");
 		GtkImage* image = lookup_widget(button, "buddy");
-
-
-
+		GtkEntry* birth = lookup_widget(button, "birthdateentry");
+		GtkEntry* web = lookup_widget(button, "webentry");
+		GtkEntry* icq = lookup_widget(button, "icqentry");
+		GtkEntry* yahoo = lookup_widget(button, "yahooentry");
+		GtkEntry* msn = lookup_widget(button, "msnentry");
+		GtkEntry* workphone = lookup_widget(button, "workphoneentry");
+		GtkEntry* workmobile = lookup_widget(button, "workmobileentry");
+		GtkEntry* workemail = lookup_widget(button, "workemailentry");
+	
 		gtk_entry_set_text(lastname,"");
 		gtk_entry_set_text(firstname,"");
 		gtk_entry_set_text(street,"");
@@ -381,8 +485,14 @@ on_deletebutton_clicked                (GtkButton       *button,
 		gtk_entry_set_text(email,"");
 		gtk_label_set_text(label,"/usr/share/gfa/pixmaps/person.png");
 		gtk_image_set_from_file(image,"/usr/share/gfa/pixmaps/person.png");
-
-
+		gtk_entry_set_text(birth,"");
+		gtk_entry_set_text(web,"");
+		gtk_entry_set_text(icq,"");
+		gtk_entry_set_text(yahoo,"");
+		gtk_entry_set_text(msn,"");
+		gtk_entry_set_text(workphone,"");
+		gtk_entry_set_text(workmobile,"");
+		gtk_entry_set_text(workemail,"");
 		}	
 		sqlite3_close(db);
 		break;
@@ -420,7 +530,14 @@ on_newbutton_clicked                   (GtkButton       *button,
 		GtkEntry* email = lookup_widget(button, "emailentry");
 		GtkLabel* label = lookup_widget(button, "url");
 		GtkImage* image = lookup_widget(button, "buddy");
-
+		GtkEntry* birth = lookup_widget(button, "birthdateentry");
+		GtkEntry* web = lookup_widget(button, "webentry");
+		GtkEntry* icq = lookup_widget(button, "icqentry");
+		GtkEntry* yahoo = lookup_widget(button, "yahooentry");
+		GtkEntry* msn = lookup_widget(button, "msnentry");
+		GtkEntry* workphone = lookup_widget(button, "workphoneentry");
+		GtkEntry* workmobile = lookup_widget(button, "workmobileentry");
+		GtkEntry* workemail = lookup_widget(button, "workemailentry");
 
 		gtk_entry_set_text(lastname,"");
 		gtk_entry_set_text(firstname,"");
@@ -433,10 +550,16 @@ on_newbutton_clicked                   (GtkButton       *button,
 		gtk_entry_set_text(email,"");
 		gtk_label_set_text(label,"/usr/share/gfa/pixmaps/person.png");
 		gtk_image_set_from_file(image,"/usr/share/gfa/pixmaps/person.png");
-
+		gtk_entry_set_text(birth,"");
+		gtk_entry_set_text(web,"");
+		gtk_entry_set_text(icq,"");
+		gtk_entry_set_text(yahoo,"");
+		gtk_entry_set_text(msn,"");
+		gtk_entry_set_text(workphone,"");
+		gtk_entry_set_text(workmobile,"");
+		gtk_entry_set_text(workemail,"");
+		
 		gtk_combo_box_set_active(combo,-1);
-
-
 }
 
 
@@ -498,8 +621,6 @@ on_buddy_button_clicked                (GtkButton       *button,
 	char *filename;
 	GtkImage* image = lookup_widget(button, "buddy");
 	GtkLabel* label = lookup_widget(button, "url");
-		
-
 
 	switch (result)
   	{
@@ -509,10 +630,6 @@ on_buddy_button_clicked                (GtkButton       *button,
 		gtk_label_set_text(label,filename);
 		break;
 	
-	case GTK_RESPONSE_CANCEL:
-
-		break;
-
 	case 123:
 		gtk_image_set_from_file(image,"/usr/share/gfa/pixmaps/person.png");
 		gtk_label_set_text(label,"/usr/share/gfa/pixmaps/person.png");
@@ -523,5 +640,57 @@ on_buddy_button_clicked                (GtkButton       *button,
 	}
 
 	gtk_widget_destroy(chooser);
+}
+
+void
+expander_callback (GObject    *object,
+                   GParamSpec *param_spec,
+                   gpointer    user_data)
+{
+  GtkExpander *expander;
+
+  expander = GTK_EXPANDER (object);
+  GtkLabel* label = lookup_widget(expander, "label25");
+
+  if (gtk_expander_get_expanded (expander))
+    {
+	    gtk_label_set_text(label,"less fields");
+    }
+  else
+    {
+	    gtk_label_set_text(label,"more fields");
+    }
+}
+
+void
+on_calendar_day_selected_double_click  (GtkCalendar     *calendar,
+                                        gpointer         user_data)
+{
+	GtkWidget* button = (GtkWidget*) user_data;
+	GtkEntry* birth = lookup_widget(button, "birthdateentry");
+	int year;
+	int month;
+	int day;
+	gtk_calendar_get_date(calendar,&year,&month,&day);
+	char* date[1024];
+	sprintf(date,"%i/%i/%i",month+1,day,year);
+	gtk_entry_set_text(birth, date);
+
+	GtkWidget* dlg = lookup_widget(calendar, "caldialog");
+	gtk_widget_destroy(dlg);
+}
+
+void
+on_datebutton_clicked                  (GtkButton       *button,
+                                        gpointer         user_data)
+{
+	GtkWidget* date = create_caldialog();
+	GtkCalendar* cal = lookup_widget(date, "calendar");
+
+	g_signal_connect ((gpointer)cal, "day_selected_double_click",
+                    G_CALLBACK (on_calendar_day_selected_double_click),
+                    button);
+
+	gtk_dialog_run (date);
 }
 
