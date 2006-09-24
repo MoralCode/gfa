@@ -322,7 +322,7 @@ on_savebutton_clicked                  (GtkButton       *button,
 
 		char copy[1024];
 		sprintf(copy,"cp -f '%s' '%s'",u, path);
-		printf("%s\n",copy);//system(copy);
+		system(copy);
 
 		char* imagefile = strtok(u,"/");
 		char* temp;
