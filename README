@@ -6,7 +6,8 @@ Status
 The current release is a beta release, but it is stable. It is ready for daily usage, no crashes appears in the tests. No data loss or something similar happens. Nevertheless there can be bugs, so be warned.
 
 Using
-I think it's not necessary to write here how to use gfa. It's self-explainig. If you wan't to create a new contact press 'New', fill out the fields and press 'Save'. If you change anything in the fields or the image, you must press 'Save' to save the changes, otherwise the changes will be lost, but I think that's clear. 'Delete' will delete the contact from your list. There will be a question if you really want to delete for accidently clicking. If you don't like the selected image anymore, than you can change it to the default icon by clicking 'Use default icon' in the file dialog. And 'Quit' quits gfa. That's all.
+I think it's not necessary to write here how to use gfa. It's self-explainig. If you wan't to create a new contact press 'New', fill out the fields and press 'Save'. If you change anything in the fields or the image, you must press 'Save' to save the changes, otherwise the changes will be lost, but I think that's clear. 'Delete' will delete the contact from your list. There will be a question if you really want to delete for accidently clicking. If you don't like the selected image anymore, than you can change it to the default icon by clicking 'Use default icon' in the file dialog. 
+You can create new groups, delete old groups or rename them over the menu 'Groups'. The groups will be listed in the combobox on the left. Changing a contact's group is very easy, just change his group in the combobox on the lower right side on the 'more fields' and press 'Save'. The contact will be immediately moved to the new group. Change the combobox on the upper left and you will only see the contacts of this group on the upper right combobox. 'Quit' quits gfa. That's all.
 
 Requirements
 You will need:
@@ -21,7 +22,6 @@ Download the package from a sourceforge.net-mirror, extract the archive, change 
 ToDo
 This is a random summary of things, that I want to implement in further versions:
 
-    * groups
     * automatically resizing the image, if it doesn't fit
     * send email with your favourite email client
     * preferences dialog

@@ -127,3 +127,23 @@ on_datebutton_clicked                  (GtkButton       *button,
 void
 on_calendar_day_selected_double_click  (GtkCalendar     *calendar,
                                         gpointer         user_data);
+
+void
+on_group1_activate                     (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_new_group_activate                  (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_rename_group_activate               (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_delete_group_activate               (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_groupcombobox_changed               (GtkComboBox     *combobox,
+                                        gpointer         user_data);

@@ -39,9 +39,18 @@ create_mainwindow (void)
   GtkWidget *delete2;
   GtkWidget *separatormenuitem1;
   GtkWidget *quit1;
+  GtkWidget *group1;
+  GtkWidget *group1_menu;
+  GtkWidget *new_group;
+  GtkWidget *image14;
+  GtkWidget *rename_group;
+  GtkWidget *image15;
+  GtkWidget *delete_group;
   GtkWidget *menuitem4;
   GtkWidget *menuitem4_menu;
   GtkWidget *about1;
+  GtkWidget *hbox4;
+  GtkWidget *groupcombobox;
   GtkWidget *addresscombobox;
   GtkWidget *hseparator2;
   GtkWidget *hbox1;
@@ -50,7 +59,6 @@ create_mainwindow (void)
   GtkWidget *fixed1;
   GtkWidget *lastnameentry;
   GtkWidget *firstnameentry;
-  GtkWidget *label2;
   GtkWidget *streetentry;
   GtkWidget *label4;
   GtkWidget *noentry;
@@ -68,6 +76,7 @@ create_mainwindow (void)
   GtkWidget *label6;
   GtkWidget *label10;
   GtkWidget *label3;
+  GtkWidget *label2;
   GtkWidget *expander;
   GtkWidget *fixed3;
   GtkWidget *webentry;
@@ -80,15 +89,17 @@ create_mainwindow (void)
   GtkWidget *label20;
   GtkWidget *datebutton;
   GtkWidget *image4;
-  GtkWidget *hseparator3;
   GtkWidget *workphoneentry;
   GtkWidget *workmobileentry;
   GtkWidget *workemailentry;
   GtkWidget *label27;
   GtkWidget *label28;
-  GtkWidget *label29;
   GtkWidget *label17;
   GtkWidget *label26;
+  GtkWidget *label29;
+  GtkWidget *label30;
+  GtkWidget *hseparator3;
+  GtkWidget *comboboxgroup;
   GtkWidget *label25;
   GtkWidget *hseparator1;
   GtkWidget *hbuttonbox1;
@@ -145,6 +156,33 @@ create_mainwindow (void)
   gtk_widget_show (quit1);
   gtk_container_add (GTK_CONTAINER (menuitem1_menu), quit1);
 
+  group1 = gtk_menu_item_new_with_mnemonic ("Group");
+  gtk_widget_show (group1);
+  gtk_container_add (GTK_CONTAINER (menubar1), group1);
+
+  group1_menu = gtk_menu_new ();
+  gtk_menu_item_set_submenu (GTK_MENU_ITEM (group1), group1_menu);
+
+  new_group = gtk_image_menu_item_new_with_mnemonic ("New");
+  gtk_widget_show (new_group);
+  gtk_container_add (GTK_CONTAINER (group1_menu), new_group);
+
+  image14 = gtk_image_new_from_stock ("gtk-new", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image14);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (new_group), image14);
+
+  rename_group = gtk_image_menu_item_new_with_mnemonic ("Rename");
+  gtk_widget_show (rename_group);
+  gtk_container_add (GTK_CONTAINER (group1_menu), rename_group);
+
+  image15 = gtk_image_new_from_stock ("gtk-edit", GTK_ICON_SIZE_MENU);
+  gtk_widget_show (image15);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (rename_group), image15);
+
+  delete_group = gtk_image_menu_item_new_from_stock ("gtk-delete", accel_group);
+  gtk_widget_show (delete_group);
+  gtk_container_add (GTK_CONTAINER (group1_menu), delete_group);
+
   menuitem4 = gtk_menu_item_new_with_mnemonic ("_Help");
   gtk_widget_show (menuitem4);
   gtk_container_add (GTK_CONTAINER (menubar1), menuitem4);
@@ -156,9 +194,20 @@ create_mainwindow (void)
   gtk_widget_show (about1);
   gtk_container_add (GTK_CONTAINER (menuitem4_menu), about1);
 
+  hbox4 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox4);
+  gtk_box_pack_start (GTK_BOX (vbox1), hbox4, FALSE, TRUE, 0);
+
+  groupcombobox = gtk_combo_box_new_text ();
+  gtk_widget_show (groupcombobox);
+  gtk_box_pack_start (GTK_BOX (hbox4), groupcombobox, TRUE, TRUE, 0);
+  gtk_widget_set_size_request (groupcombobox, 90, -1);
+  gtk_container_set_border_width (GTK_CONTAINER (groupcombobox), 3);
+
   addresscombobox = gtk_combo_box_new_text ();
   gtk_widget_show (addresscombobox);
-  gtk_box_pack_start (GTK_BOX (vbox1), addresscombobox, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox4), addresscombobox, TRUE, TRUE, 0);
+  gtk_widget_set_size_request (addresscombobox, 390, -1);
   gtk_container_set_border_width (GTK_CONTAINER (addresscombobox), 3);
 
   hseparator2 = gtk_hseparator_new ();
@@ -192,11 +241,6 @@ create_mainwindow (void)
   gtk_widget_show (firstnameentry);
   gtk_fixed_put (GTK_FIXED (fixed1), firstnameentry, 320, 16);
   gtk_widget_set_size_request (firstnameentry, 160, 26);
-
-  label2 = gtk_label_new ("first name:");
-  gtk_widget_show (label2);
-  gtk_fixed_put (GTK_FIXED (fixed1), label2, 240, 16);
-  gtk_widget_set_size_request (label2, 88, 24);
 
   streetentry = gtk_entry_new ();
   gtk_widget_show (streetentry);
@@ -284,6 +328,11 @@ create_mainwindow (void)
   gtk_fixed_put (GTK_FIXED (fixed1), label3, 8, 16);
   gtk_widget_set_size_request (label3, 72, 24);
 
+  label2 = gtk_label_new ("first name:");
+  gtk_widget_show (label2);
+  gtk_fixed_put (GTK_FIXED (fixed1), label2, 240, 16);
+  gtk_widget_set_size_request (label2, 88, 24);
+
   expander = gtk_expander_new (NULL);
   gtk_widget_show (expander);
   gtk_box_pack_start (GTK_BOX (vbox1), expander, TRUE, TRUE, 0);
@@ -343,11 +392,6 @@ create_mainwindow (void)
   gtk_widget_show (image4);
   gtk_container_add (GTK_CONTAINER (datebutton), image4);
 
-  hseparator3 = gtk_hseparator_new ();
-  gtk_widget_show (hseparator3);
-  gtk_fixed_put (GTK_FIXED (fixed3), hseparator3, 8, 0);
-  gtk_widget_set_size_request (hseparator3, 592, 16);
-
   workphoneentry = gtk_entry_new ();
   gtk_widget_show (workphoneentry);
   gtk_fixed_put (GTK_FIXED (fixed3), workphoneentry, 388, 16);
@@ -373,11 +417,6 @@ create_mainwindow (void)
   gtk_fixed_put (GTK_FIXED (fixed3), label28, 294, 48);
   gtk_widget_set_size_request (label28, 96, 24);
 
-  label29 = gtk_label_new (" work email:");
-  gtk_widget_show (label29);
-  gtk_fixed_put (GTK_FIXED (fixed3), label29, 302, 80);
-  gtk_widget_set_size_request (label29, 88, 24);
-
   label17 = gtk_label_new (" web:");
   gtk_widget_show (label17);
   gtk_fixed_put (GTK_FIXED (fixed3), label17, 37, 40);
@@ -387,6 +426,26 @@ create_mainwindow (void)
   gtk_widget_show (label26);
   gtk_fixed_put (GTK_FIXED (fixed3), label26, 8, 16);
   gtk_widget_set_size_request (label26, 72, 24);
+
+  label29 = gtk_label_new (" work email:");
+  gtk_widget_show (label29);
+  gtk_fixed_put (GTK_FIXED (fixed3), label29, 302, 80);
+  gtk_widget_set_size_request (label29, 88, 24);
+
+  label30 = gtk_label_new ("group: ");
+  gtk_widget_show (label30);
+  gtk_fixed_put (GTK_FIXED (fixed3), label30, 339, 112);
+  gtk_widget_set_size_request (label30, 56, 32);
+
+  hseparator3 = gtk_hseparator_new ();
+  gtk_widget_show (hseparator3);
+  gtk_fixed_put (GTK_FIXED (fixed3), hseparator3, 8, 0);
+  gtk_widget_set_size_request (hseparator3, 592, 16);
+
+  comboboxgroup = gtk_combo_box_new_text ();
+  gtk_widget_show (comboboxgroup);
+  gtk_fixed_put (GTK_FIXED (fixed3), comboboxgroup, 388, 112);
+  gtk_widget_set_size_request (comboboxgroup, 215, 32);
 
   label25 = gtk_label_new ("more fields");
   gtk_widget_show (label25);
@@ -439,8 +498,23 @@ create_mainwindow (void)
   g_signal_connect ((gpointer) quit1, "activate",
                     G_CALLBACK (on_quit_activate),
                     NULL);
+  g_signal_connect ((gpointer) group1, "activate",
+                    G_CALLBACK (on_group1_activate),
+                    NULL);
+  g_signal_connect ((gpointer) new_group, "activate",
+                    G_CALLBACK (on_new_group_activate),
+                    NULL);
+  g_signal_connect ((gpointer) rename_group, "activate",
+                    G_CALLBACK (on_rename_group_activate),
+                    NULL);
+  g_signal_connect ((gpointer) delete_group, "activate",
+                    G_CALLBACK (on_delete_group_activate),
+                    NULL);
   g_signal_connect ((gpointer) about1, "activate",
                     G_CALLBACK (on_about_activate),
+                    NULL);
+  g_signal_connect ((gpointer) groupcombobox, "changed",
+                    G_CALLBACK (on_groupcombobox_changed),
                     NULL);
   g_signal_connect ((gpointer) addresscombobox, "changed",
                     G_CALLBACK (on_addresscombobox_changed),
@@ -481,9 +555,18 @@ create_mainwindow (void)
   GLADE_HOOKUP_OBJECT (mainwindow, delete2, "delete2");
   GLADE_HOOKUP_OBJECT (mainwindow, separatormenuitem1, "separatormenuitem1");
   GLADE_HOOKUP_OBJECT (mainwindow, quit1, "quit1");
+  GLADE_HOOKUP_OBJECT (mainwindow, group1, "group1");
+  GLADE_HOOKUP_OBJECT (mainwindow, group1_menu, "group1_menu");
+  GLADE_HOOKUP_OBJECT (mainwindow, new_group, "new_group");
+  GLADE_HOOKUP_OBJECT (mainwindow, image14, "image14");
+  GLADE_HOOKUP_OBJECT (mainwindow, rename_group, "rename_group");
+  GLADE_HOOKUP_OBJECT (mainwindow, image15, "image15");
+  GLADE_HOOKUP_OBJECT (mainwindow, delete_group, "delete_group");
   GLADE_HOOKUP_OBJECT (mainwindow, menuitem4, "menuitem4");
   GLADE_HOOKUP_OBJECT (mainwindow, menuitem4_menu, "menuitem4_menu");
   GLADE_HOOKUP_OBJECT (mainwindow, about1, "about1");
+  GLADE_HOOKUP_OBJECT (mainwindow, hbox4, "hbox4");
+  GLADE_HOOKUP_OBJECT (mainwindow, groupcombobox, "groupcombobox");
   GLADE_HOOKUP_OBJECT (mainwindow, addresscombobox, "addresscombobox");
   GLADE_HOOKUP_OBJECT (mainwindow, hseparator2, "hseparator2");
   GLADE_HOOKUP_OBJECT (mainwindow, hbox1, "hbox1");
@@ -492,7 +575,6 @@ create_mainwindow (void)
   GLADE_HOOKUP_OBJECT (mainwindow, fixed1, "fixed1");
   GLADE_HOOKUP_OBJECT (mainwindow, lastnameentry, "lastnameentry");
   GLADE_HOOKUP_OBJECT (mainwindow, firstnameentry, "firstnameentry");
-  GLADE_HOOKUP_OBJECT (mainwindow, label2, "label2");
   GLADE_HOOKUP_OBJECT (mainwindow, streetentry, "streetentry");
   GLADE_HOOKUP_OBJECT (mainwindow, label4, "label4");
   GLADE_HOOKUP_OBJECT (mainwindow, noentry, "noentry");
@@ -510,6 +592,7 @@ create_mainwindow (void)
   GLADE_HOOKUP_OBJECT (mainwindow, label6, "label6");
   GLADE_HOOKUP_OBJECT (mainwindow, label10, "label10");
   GLADE_HOOKUP_OBJECT (mainwindow, label3, "label3");
+  GLADE_HOOKUP_OBJECT (mainwindow, label2, "label2");
   GLADE_HOOKUP_OBJECT (mainwindow, expander, "expander");
   GLADE_HOOKUP_OBJECT (mainwindow, fixed3, "fixed3");
   GLADE_HOOKUP_OBJECT (mainwindow, webentry, "webentry");
@@ -522,15 +605,17 @@ create_mainwindow (void)
   GLADE_HOOKUP_OBJECT (mainwindow, label20, "label20");
   GLADE_HOOKUP_OBJECT (mainwindow, datebutton, "datebutton");
   GLADE_HOOKUP_OBJECT (mainwindow, image4, "image4");
-  GLADE_HOOKUP_OBJECT (mainwindow, hseparator3, "hseparator3");
   GLADE_HOOKUP_OBJECT (mainwindow, workphoneentry, "workphoneentry");
   GLADE_HOOKUP_OBJECT (mainwindow, workmobileentry, "workmobileentry");
   GLADE_HOOKUP_OBJECT (mainwindow, workemailentry, "workemailentry");
   GLADE_HOOKUP_OBJECT (mainwindow, label27, "label27");
   GLADE_HOOKUP_OBJECT (mainwindow, label28, "label28");
-  GLADE_HOOKUP_OBJECT (mainwindow, label29, "label29");
   GLADE_HOOKUP_OBJECT (mainwindow, label17, "label17");
   GLADE_HOOKUP_OBJECT (mainwindow, label26, "label26");
+  GLADE_HOOKUP_OBJECT (mainwindow, label29, "label29");
+  GLADE_HOOKUP_OBJECT (mainwindow, label30, "label30");
+  GLADE_HOOKUP_OBJECT (mainwindow, hseparator3, "hseparator3");
+  GLADE_HOOKUP_OBJECT (mainwindow, comboboxgroup, "comboboxgroup");
   GLADE_HOOKUP_OBJECT (mainwindow, label25, "label25");
   GLADE_HOOKUP_OBJECT (mainwindow, hseparator1, "hseparator1");
   GLADE_HOOKUP_OBJECT (mainwindow, hbuttonbox1, "hbuttonbox1");
@@ -560,6 +645,7 @@ create_dialog1 (void)
   dialog1 = gtk_dialog_new ();
   gtk_widget_set_size_request (dialog1, 350, 150);
   gtk_window_set_title (GTK_WINDOW (dialog1), "Question");
+  gtk_window_set_position (GTK_WINDOW (dialog1), GTK_WIN_POS_MOUSE);
   gtk_window_set_modal (GTK_WINDOW (dialog1), TRUE);
   gtk_window_set_resizable (GTK_WINDOW (dialog1), FALSE);
   gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog1), TRUE);
@@ -622,6 +708,7 @@ create_dialog2 (void)
   dialog2 = gtk_dialog_new ();
   gtk_widget_set_size_request (dialog2, 350, 150);
   gtk_window_set_title (GTK_WINDOW (dialog2), "Information");
+  gtk_window_set_position (GTK_WINDOW (dialog2), GTK_WIN_POS_MOUSE);
   gtk_window_set_icon_name (GTK_WINDOW (dialog2), "stock_book_red");
   gtk_window_set_type_hint (GTK_WINDOW (dialog2), GDK_WINDOW_TYPE_HINT_DIALOG);
 
@@ -697,8 +784,8 @@ create_dialog3 (void)
   GtkWidget *okbutton2;
 
   dialog3 = gtk_dialog_new ();
-  gtk_widget_set_size_request (dialog3, 350, 150);
   gtk_window_set_title (GTK_WINDOW (dialog3), "Information");
+  gtk_window_set_position (GTK_WINDOW (dialog3), GTK_WIN_POS_MOUSE);
   gtk_window_set_type_hint (GTK_WINDOW (dialog3), GDK_WINDOW_TYPE_HINT_DIALOG);
 
   dialog_vbox3 = GTK_DIALOG (dialog3)->vbox;
@@ -825,5 +912,400 @@ create_caldialog (void)
   GLADE_HOOKUP_OBJECT_NO_REF (caldialog, dialog_action_area5, "dialog_action_area5");
 
   return caldialog;
+}
+
+GtkWidget*
+create_dialog4 (void)
+{
+  GtkWidget *dialog4;
+  GtkWidget *dialog_vbox6;
+  GtkWidget *vbox2;
+  GtkWidget *label31;
+  GtkWidget *groupentry;
+  GtkWidget *dialog_action_area6;
+  GtkWidget *cancelbutton2;
+  GtkWidget *okbutton3;
+  GtkWidget *alignment2;
+  GtkWidget *hbox6;
+  GtkWidget *image6;
+  GtkWidget *label34;
+
+  dialog4 = gtk_dialog_new ();
+  gtk_window_set_title (GTK_WINDOW (dialog4), "New group...");
+  gtk_window_set_position (GTK_WINDOW (dialog4), GTK_WIN_POS_MOUSE);
+  gtk_window_set_modal (GTK_WINDOW (dialog4), TRUE);
+  gtk_window_set_type_hint (GTK_WINDOW (dialog4), GDK_WINDOW_TYPE_HINT_DIALOG);
+
+  dialog_vbox6 = GTK_DIALOG (dialog4)->vbox;
+  gtk_widget_show (dialog_vbox6);
+
+  vbox2 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox2);
+  gtk_box_pack_start (GTK_BOX (dialog_vbox6), vbox2, TRUE, TRUE, 0);
+
+  label31 = gtk_label_new ("\nEnter a name for the new group:");
+  gtk_widget_show (label31);
+  gtk_box_pack_start (GTK_BOX (vbox2), label31, FALSE, FALSE, 0);
+
+  groupentry = gtk_entry_new ();
+  gtk_widget_show (groupentry);
+  gtk_box_pack_start (GTK_BOX (vbox2), groupentry, FALSE, FALSE, 0);
+  gtk_entry_set_activates_default (GTK_ENTRY (groupentry), TRUE);
+
+  dialog_action_area6 = GTK_DIALOG (dialog4)->action_area;
+  gtk_widget_show (dialog_action_area6);
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area6), GTK_BUTTONBOX_END);
+
+  cancelbutton2 = gtk_button_new_from_stock ("gtk-cancel");
+  gtk_widget_show (cancelbutton2);
+  gtk_dialog_add_action_widget (GTK_DIALOG (dialog4), cancelbutton2, GTK_RESPONSE_CANCEL);
+  GTK_WIDGET_SET_FLAGS (cancelbutton2, GTK_CAN_DEFAULT);
+
+  okbutton3 = gtk_button_new ();
+  gtk_widget_show (okbutton3);
+  gtk_dialog_add_action_widget (GTK_DIALOG (dialog4), okbutton3, GTK_RESPONSE_OK);
+  GTK_WIDGET_SET_FLAGS (okbutton3, GTK_CAN_DEFAULT);
+
+  alignment2 = gtk_alignment_new (0.5, 0.5, 0, 0);
+  gtk_widget_show (alignment2);
+  gtk_container_add (GTK_CONTAINER (okbutton3), alignment2);
+
+  hbox6 = gtk_hbox_new (FALSE, 2);
+  gtk_widget_show (hbox6);
+  gtk_container_add (GTK_CONTAINER (alignment2), hbox6);
+
+  image6 = gtk_image_new_from_stock ("gtk-ok", GTK_ICON_SIZE_BUTTON);
+  gtk_widget_show (image6);
+  gtk_box_pack_start (GTK_BOX (hbox6), image6, FALSE, FALSE, 0);
+
+  label34 = gtk_label_new_with_mnemonic ("Create");
+  gtk_widget_show (label34);
+  gtk_box_pack_start (GTK_BOX (hbox6), label34, FALSE, FALSE, 0);
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog4, dialog4, "dialog4");
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog4, dialog_vbox6, "dialog_vbox6");
+  GLADE_HOOKUP_OBJECT (dialog4, vbox2, "vbox2");
+  GLADE_HOOKUP_OBJECT (dialog4, label31, "label31");
+  GLADE_HOOKUP_OBJECT (dialog4, groupentry, "groupentry");
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog4, dialog_action_area6, "dialog_action_area6");
+  GLADE_HOOKUP_OBJECT (dialog4, cancelbutton2, "cancelbutton2");
+  GLADE_HOOKUP_OBJECT (dialog4, okbutton3, "okbutton3");
+  GLADE_HOOKUP_OBJECT (dialog4, alignment2, "alignment2");
+  GLADE_HOOKUP_OBJECT (dialog4, hbox6, "hbox6");
+  GLADE_HOOKUP_OBJECT (dialog4, image6, "image6");
+  GLADE_HOOKUP_OBJECT (dialog4, label34, "label34");
+
+  gtk_widget_grab_focus (groupentry);
+  gtk_widget_grab_default (okbutton3);
+  return dialog4;
+}
+
+GtkWidget*
+create_dialog5 (void)
+{
+  GtkWidget *dialog5;
+  GtkWidget *vbox3;
+  GtkWidget *vbox4;
+  GtkWidget *label32;
+  GtkWidget *entry1;
+  GtkWidget *hbuttonbox2;
+  GtkWidget *button5;
+  GtkWidget *button6;
+  GtkWidget *alignment1;
+  GtkWidget *hbox5;
+  GtkWidget *image5;
+  GtkWidget *label33;
+
+  dialog5 = gtk_dialog_new ();
+  gtk_window_set_title (GTK_WINDOW (dialog5), "Rename group...");
+  gtk_window_set_position (GTK_WINDOW (dialog5), GTK_WIN_POS_MOUSE);
+  gtk_window_set_modal (GTK_WINDOW (dialog5), TRUE);
+  gtk_window_set_type_hint (GTK_WINDOW (dialog5), GDK_WINDOW_TYPE_HINT_DIALOG);
+
+  vbox3 = GTK_DIALOG (dialog5)->vbox;
+  gtk_widget_show (vbox3);
+
+  vbox4 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox4);
+  gtk_box_pack_start (GTK_BOX (vbox3), vbox4, TRUE, TRUE, 0);
+
+  label32 = gtk_label_new ("\nEnter a new name for the group:");
+  gtk_widget_show (label32);
+  gtk_box_pack_start (GTK_BOX (vbox4), label32, FALSE, FALSE, 0);
+
+  entry1 = gtk_entry_new ();
+  gtk_widget_show (entry1);
+  gtk_box_pack_start (GTK_BOX (vbox4), entry1, FALSE, FALSE, 0);
+  gtk_entry_set_activates_default (GTK_ENTRY (entry1), TRUE);
+
+  hbuttonbox2 = GTK_DIALOG (dialog5)->action_area;
+  gtk_widget_show (hbuttonbox2);
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox2), GTK_BUTTONBOX_END);
+
+  button5 = gtk_button_new_from_stock ("gtk-cancel");
+  gtk_widget_show (button5);
+  gtk_dialog_add_action_widget (GTK_DIALOG (dialog5), button5, GTK_RESPONSE_CANCEL);
+  GTK_WIDGET_SET_FLAGS (button5, GTK_CAN_DEFAULT);
+
+  button6 = gtk_button_new ();
+  gtk_widget_show (button6);
+  gtk_dialog_add_action_widget (GTK_DIALOG (dialog5), button6, GTK_RESPONSE_OK);
+  GTK_WIDGET_SET_FLAGS (button6, GTK_CAN_DEFAULT);
+
+  alignment1 = gtk_alignment_new (0.5, 0.5, 0, 0);
+  gtk_widget_show (alignment1);
+  gtk_container_add (GTK_CONTAINER (button6), alignment1);
+
+  hbox5 = gtk_hbox_new (FALSE, 2);
+  gtk_widget_show (hbox5);
+  gtk_container_add (GTK_CONTAINER (alignment1), hbox5);
+
+  image5 = gtk_image_new_from_stock ("gtk-ok", GTK_ICON_SIZE_BUTTON);
+  gtk_widget_show (image5);
+  gtk_box_pack_start (GTK_BOX (hbox5), image5, FALSE, FALSE, 0);
+
+  label33 = gtk_label_new_with_mnemonic ("Rename");
+  gtk_widget_show (label33);
+  gtk_box_pack_start (GTK_BOX (hbox5), label33, FALSE, FALSE, 0);
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog5, dialog5, "dialog5");
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog5, vbox3, "vbox3");
+  GLADE_HOOKUP_OBJECT (dialog5, vbox4, "vbox4");
+  GLADE_HOOKUP_OBJECT (dialog5, label32, "label32");
+  GLADE_HOOKUP_OBJECT (dialog5, entry1, "entry1");
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog5, hbuttonbox2, "hbuttonbox2");
+  GLADE_HOOKUP_OBJECT (dialog5, button5, "button5");
+  GLADE_HOOKUP_OBJECT (dialog5, button6, "button6");
+  GLADE_HOOKUP_OBJECT (dialog5, alignment1, "alignment1");
+  GLADE_HOOKUP_OBJECT (dialog5, hbox5, "hbox5");
+  GLADE_HOOKUP_OBJECT (dialog5, image5, "image5");
+  GLADE_HOOKUP_OBJECT (dialog5, label33, "label33");
+
+  gtk_widget_grab_focus (entry1);
+  gtk_widget_grab_default (button6);
+  return dialog5;
+}
+
+GtkWidget*
+create_dialog6 (void)
+{
+  GtkWidget *dialog6;
+  GtkWidget *vbox5;
+  GtkWidget *hbox7;
+  GtkWidget *image7;
+  GtkWidget *label35;
+  GtkWidget *hbuttonbox3;
+  GtkWidget *button7;
+
+  dialog6 = gtk_dialog_new ();
+  gtk_widget_set_size_request (dialog6, 350, -1);
+  gtk_window_set_title (GTK_WINDOW (dialog6), "Information");
+  gtk_window_set_position (GTK_WINDOW (dialog6), GTK_WIN_POS_MOUSE);
+  gtk_window_set_type_hint (GTK_WINDOW (dialog6), GDK_WINDOW_TYPE_HINT_DIALOG);
+
+  vbox5 = GTK_DIALOG (dialog6)->vbox;
+  gtk_widget_show (vbox5);
+
+  hbox7 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox7);
+  gtk_box_pack_start (GTK_BOX (vbox5), hbox7, TRUE, TRUE, 0);
+
+  image7 = gtk_image_new_from_stock ("gtk-dialog-error", GTK_ICON_SIZE_DIALOG);
+  gtk_widget_show (image7);
+  gtk_box_pack_start (GTK_BOX (hbox7), image7, TRUE, TRUE, 0);
+
+  label35 = gtk_label_new ("You can't change the name of this group. ");
+  gtk_widget_show (label35);
+  gtk_box_pack_start (GTK_BOX (hbox7), label35, FALSE, FALSE, 0);
+
+  hbuttonbox3 = GTK_DIALOG (dialog6)->action_area;
+  gtk_widget_show (hbuttonbox3);
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox3), GTK_BUTTONBOX_END);
+
+  button7 = gtk_button_new_from_stock ("gtk-ok");
+  gtk_widget_show (button7);
+  gtk_dialog_add_action_widget (GTK_DIALOG (dialog6), button7, GTK_RESPONSE_OK);
+  GTK_WIDGET_SET_FLAGS (button7, GTK_CAN_DEFAULT);
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog6, dialog6, "dialog6");
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog6, vbox5, "vbox5");
+  GLADE_HOOKUP_OBJECT (dialog6, hbox7, "hbox7");
+  GLADE_HOOKUP_OBJECT (dialog6, image7, "image7");
+  GLADE_HOOKUP_OBJECT (dialog6, label35, "label35");
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog6, hbuttonbox3, "hbuttonbox3");
+  GLADE_HOOKUP_OBJECT (dialog6, button7, "button7");
+
+  return dialog6;
+}
+
+GtkWidget*
+create_dialog7 (void)
+{
+  GtkWidget *dialog7;
+  GtkWidget *vbox6;
+  GtkWidget *hbox8;
+  GtkWidget *image8;
+  GtkWidget *label36;
+  GtkWidget *hbuttonbox4;
+  GtkWidget *button8;
+
+  dialog7 = gtk_dialog_new ();
+  gtk_window_set_title (GTK_WINDOW (dialog7), "Information");
+  gtk_window_set_position (GTK_WINDOW (dialog7), GTK_WIN_POS_MOUSE);
+  gtk_window_set_type_hint (GTK_WINDOW (dialog7), GDK_WINDOW_TYPE_HINT_DIALOG);
+
+  vbox6 = GTK_DIALOG (dialog7)->vbox;
+  gtk_widget_show (vbox6);
+
+  hbox8 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox8);
+  gtk_box_pack_start (GTK_BOX (vbox6), hbox8, TRUE, TRUE, 0);
+
+  image8 = gtk_image_new_from_stock ("gtk-dialog-error", GTK_ICON_SIZE_DIALOG);
+  gtk_widget_show (image8);
+  gtk_box_pack_start (GTK_BOX (hbox8), image8, TRUE, TRUE, 0);
+
+  label36 = gtk_label_new ("You can't delete this group. ");
+  gtk_widget_show (label36);
+  gtk_box_pack_start (GTK_BOX (hbox8), label36, FALSE, FALSE, 0);
+
+  hbuttonbox4 = GTK_DIALOG (dialog7)->action_area;
+  gtk_widget_show (hbuttonbox4);
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox4), GTK_BUTTONBOX_END);
+
+  button8 = gtk_button_new_from_stock ("gtk-ok");
+  gtk_widget_show (button8);
+  gtk_dialog_add_action_widget (GTK_DIALOG (dialog7), button8, GTK_RESPONSE_OK);
+  GTK_WIDGET_SET_FLAGS (button8, GTK_CAN_DEFAULT);
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog7, dialog7, "dialog7");
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog7, vbox6, "vbox6");
+  GLADE_HOOKUP_OBJECT (dialog7, hbox8, "hbox8");
+  GLADE_HOOKUP_OBJECT (dialog7, image8, "image8");
+  GLADE_HOOKUP_OBJECT (dialog7, label36, "label36");
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog7, hbuttonbox4, "hbuttonbox4");
+  GLADE_HOOKUP_OBJECT (dialog7, button8, "button8");
+
+  return dialog7;
+}
+
+GtkWidget*
+create_dialog8 (void)
+{
+  GtkWidget *dialog8;
+  GtkWidget *dialog_vbox7;
+  GtkWidget *hbox11;
+  GtkWidget *image11;
+  GtkWidget *label39;
+  GtkWidget *dialog_action_area7;
+  GtkWidget *button9;
+  GtkWidget *alignment3;
+  GtkWidget *hbox9;
+  GtkWidget *image9;
+  GtkWidget *label37;
+  GtkWidget *button10;
+  GtkWidget *alignment4;
+  GtkWidget *hbox10;
+  GtkWidget *image10;
+  GtkWidget *label38;
+  GtkWidget *button11;
+
+  dialog8 = gtk_dialog_new ();
+  gtk_window_set_title (GTK_WINDOW (dialog8), "Delete or move all contacts in this group?");
+  gtk_window_set_position (GTK_WINDOW (dialog8), GTK_WIN_POS_MOUSE);
+  gtk_window_set_type_hint (GTK_WINDOW (dialog8), GDK_WINDOW_TYPE_HINT_DIALOG);
+
+  dialog_vbox7 = GTK_DIALOG (dialog8)->vbox;
+  gtk_widget_show (dialog_vbox7);
+
+  hbox11 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox11);
+  gtk_box_pack_start (GTK_BOX (dialog_vbox7), hbox11, FALSE, FALSE, 0);
+
+  image11 = gtk_image_new_from_stock ("gtk-dialog-question", GTK_ICON_SIZE_DIALOG);
+  gtk_widget_show (image11);
+  gtk_box_pack_start (GTK_BOX (hbox11), image11, TRUE, TRUE, 0);
+
+  label39 = gtk_label_new ("Do you want to delete the group and all contacts in it or \nmove all contacts from this group to 'General'?         ");
+  gtk_widget_show (label39);
+  gtk_box_pack_start (GTK_BOX (hbox11), label39, FALSE, FALSE, 0);
+
+  dialog_action_area7 = GTK_DIALOG (dialog8)->action_area;
+  gtk_widget_show (dialog_action_area7);
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area7), GTK_BUTTONBOX_END);
+
+  button9 = gtk_button_new ();
+  gtk_widget_show (button9);
+  gtk_dialog_add_action_widget (GTK_DIALOG (dialog8), button9, 1);
+  GTK_WIDGET_SET_FLAGS (button9, GTK_CAN_DEFAULT);
+
+  alignment3 = gtk_alignment_new (0.5, 0.5, 0, 0);
+  gtk_widget_show (alignment3);
+  gtk_container_add (GTK_CONTAINER (button9), alignment3);
+
+  hbox9 = gtk_hbox_new (FALSE, 2);
+  gtk_widget_show (hbox9);
+  gtk_container_add (GTK_CONTAINER (alignment3), hbox9);
+
+  image9 = gtk_image_new_from_stock ("gtk-delete", GTK_ICON_SIZE_BUTTON);
+  gtk_widget_show (image9);
+  gtk_box_pack_start (GTK_BOX (hbox9), image9, FALSE, FALSE, 0);
+
+  label37 = gtk_label_new_with_mnemonic ("Delete all contacts");
+  gtk_widget_show (label37);
+  gtk_box_pack_start (GTK_BOX (hbox9), label37, FALSE, FALSE, 0);
+
+  button10 = gtk_button_new ();
+  gtk_widget_show (button10);
+  gtk_dialog_add_action_widget (GTK_DIALOG (dialog8), button10, 0);
+  GTK_WIDGET_SET_FLAGS (button10, GTK_CAN_DEFAULT);
+
+  alignment4 = gtk_alignment_new (0.5, 0.5, 0, 0);
+  gtk_widget_show (alignment4);
+  gtk_container_add (GTK_CONTAINER (button10), alignment4);
+
+  hbox10 = gtk_hbox_new (FALSE, 2);
+  gtk_widget_show (hbox10);
+  gtk_container_add (GTK_CONTAINER (alignment4), hbox10);
+
+  image10 = gtk_image_new_from_stock ("gtk-undo", GTK_ICON_SIZE_BUTTON);
+  gtk_widget_show (image10);
+  gtk_box_pack_start (GTK_BOX (hbox10), image10, FALSE, FALSE, 0);
+
+  label38 = gtk_label_new_with_mnemonic ("Move all contacts");
+  gtk_widget_show (label38);
+  gtk_box_pack_start (GTK_BOX (hbox10), label38, FALSE, FALSE, 0);
+
+  button11 = gtk_button_new_from_stock ("gtk-cancel");
+  gtk_widget_show (button11);
+  gtk_dialog_add_action_widget (GTK_DIALOG (dialog8), button11, GTK_RESPONSE_CANCEL);
+  GTK_WIDGET_SET_FLAGS (button11, GTK_CAN_DEFAULT);
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog8, dialog8, "dialog8");
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog8, dialog_vbox7, "dialog_vbox7");
+  GLADE_HOOKUP_OBJECT (dialog8, hbox11, "hbox11");
+  GLADE_HOOKUP_OBJECT (dialog8, image11, "image11");
+  GLADE_HOOKUP_OBJECT (dialog8, label39, "label39");
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog8, dialog_action_area7, "dialog_action_area7");
+  GLADE_HOOKUP_OBJECT (dialog8, button9, "button9");
+  GLADE_HOOKUP_OBJECT (dialog8, alignment3, "alignment3");
+  GLADE_HOOKUP_OBJECT (dialog8, hbox9, "hbox9");
+  GLADE_HOOKUP_OBJECT (dialog8, image9, "image9");
+  GLADE_HOOKUP_OBJECT (dialog8, label37, "label37");
+  GLADE_HOOKUP_OBJECT (dialog8, button10, "button10");
+  GLADE_HOOKUP_OBJECT (dialog8, alignment4, "alignment4");
+  GLADE_HOOKUP_OBJECT (dialog8, hbox10, "hbox10");
+  GLADE_HOOKUP_OBJECT (dialog8, image10, "image10");
+  GLADE_HOOKUP_OBJECT (dialog8, label38, "label38");
+  GLADE_HOOKUP_OBJECT (dialog8, button11, "button11");
+
+  gtk_widget_grab_focus (button11);
+  gtk_widget_grab_default (button11);
+  return dialog8;
 }
 

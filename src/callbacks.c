@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
 #include <string.h>
 
 #include "callbacks.h"
@@ -56,6 +57,48 @@ static int callback(void *mainwindow, int argc, char **argv, char **azColName)
 }
 
 
+static int callback_group(void *groupcombo, int argc, char **argv, char **azColName)
+{
+ 
+  GtkWidget* combo = (GtkWidget*) groupcombo;
+  GtkWidget* combogroup = lookup_widget(combo, "comboboxgroup");
+
+  int i;
+  char combotext[1024];
+  for(i=0; i<argc; i++){
+	   if(strcmp(azColName[i],"group_name") == 0)
+	  {
+		//g_strlcat(combotext,argv[i],1024);
+		gtk_combo_box_append_text(GTK_COMBO_BOX(combo), argv[i]);
+		gtk_combo_box_append_text(GTK_COMBO_BOX(combogroup), argv[i]);
+	  }
+  }
+  return 0;
+}
+
+static int callback_change(void *addresscombo, int argc, char **argv, char **azColName)
+{
+  GtkWidget* combo = (GtkWidget*) addresscombo;
+
+  int i;
+  char combotext[1024];
+  for(i=0; i<argc; i++){
+	  if(strcmp(azColName[i],"Last_Name") == 0)
+	  {
+		sprintf(combotext, "%s, ", argv[i]);
+	  }
+	  if(strcmp(azColName[i],"First_Name") == 0)
+	  {
+		g_strlcat(combotext,argv[i],1024);
+		gtk_combo_box_append_text(GTK_COMBO_BOX(combo), combotext);
+	  }
+  }
+  return 0;
+}
+
+
+
+
 static int callback_insert(void *button, int argc, char **argv, char **azColName)
 {
   GtkWidget* btn = (GtkWidget*) button;
@@ -69,6 +112,12 @@ static int callback_insert(void *button, int argc, char **argv, char **azColName
   return 0;
 }
 
+static 
+int callback_id(void *id, int argc, char **argv, char **azColName)
+{
+	strcpy(id,argv[0]);
+	return 0;
+}
 
 static int del_file_callback(void *unused, int argc, char **argv, char **azColName)
 {
@@ -113,9 +162,6 @@ static int oldcheck(void *db, int argc, char **argv, char **azColName)
   return 0;
 }
 
-
-
-
 static int combo_active(void *combobox, int argc, char **argv, char **azColName)
 {
  
@@ -139,7 +185,14 @@ static int combo_active(void *combobox, int argc, char **argv, char **azColName)
   GtkWidget* workphone = lookup_widget(btn, "workphoneentry");
   GtkWidget* workmobile = lookup_widget(btn, "workmobileentry");
   GtkWidget* workemail = lookup_widget(btn, "workemailentry");
+  GtkWidget* groupcombo = lookup_widget(btn, "comboboxgroup");
+  GtkWidget* groupselect = lookup_widget(btn, "groupcombobox");
 
+  const char* active_group = gtk_combo_box_get_active_text(GTK_COMBO_BOX(groupselect));
+  int active_group_id = gtk_combo_box_get_active(GTK_COMBO_BOX(groupselect));
+
+
+    
   int i;
   char entrytext[1024];
   for(i=0; i<argc; i++){
@@ -169,7 +222,7 @@ static int combo_active(void *combobox, int argc, char **argv, char **azColName)
 	  }
 	  if(strcmp(azColName[i],"Phone") == 0)
 	  {
-		gtk_entry_set_text(GTK_ENTRY(phone),argv[i]);
+	       gtk_entry_set_text(GTK_ENTRY(phone),argv[i]);
 	  }
 	  if(strcmp(azColName[i],"Mobile") == 0)
 	  {
@@ -221,6 +274,13 @@ static int combo_active(void *combobox, int argc, char **argv, char **azColName)
 	  if(strcmp(azColName[i],"Workemail") == 0)
 	  {
 		gtk_entry_set_text(GTK_ENTRY(workemail),argv[i]);
+	  }
+	   if(strcmp(azColName[i],"Groups") == 0)
+	  {
+		  if ( !(strcmp(active_group,"All") == 0) )
+		  {
+			  gtk_combo_box_set_active(GTK_COMBO_BOX(groupcombo),active_group_id-1);
+		  } 
 	  }
   }
   return 0;
@@ -294,6 +354,28 @@ on_savebutton_clicked                  (GtkButton       *button,
 	GtkWidget* workphone = lookup_widget(GTK_WIDGET(button), "workphoneentry");
 	GtkWidget* workmobile = lookup_widget(GTK_WIDGET(button), "workmobileentry");
 	GtkWidget* workemail = lookup_widget(GTK_WIDGET(button), "workemailentry");
+	GtkWidget* group = lookup_widget(GTK_WIDGET(button), "comboboxgroup");
+	GtkWidget* addresscombobox = lookup_widget(GTK_WIDGET(button), "addresscombobox");
+	GtkWidget* image = lookup_widget(GTK_WIDGET(button), "buddy");
+
+	int comboid = gtk_combo_box_get_active(GTK_COMBO_BOX(addresscombobox));
+
+	const char* groupname = gtk_combo_box_get_active_text(GTK_COMBO_BOX(group));
+	char id[1024];		
+	char id_request[1024];
+	sprintf(id_request, "select group_id from gfa_groups where group_name = '%s';", groupname);
+	rc = sqlite3_exec(db, id_request, callback_id, &id, &zErrMsg);
+
+
+	GtkWidget* active_group = lookup_widget(GTK_WIDGET(button), "groupcombobox");
+
+	const char* activegroupname = gtk_combo_box_get_active_text(GTK_COMBO_BOX(active_group));
+	char id_active[1024];		
+	char id_request_active[1024];
+	sprintf(id_request_active, "select group_id from gfa_groups where group_name = '%s';", activegroupname);
+	rc = sqlite3_exec(db, id_request_active, callback_id, &id_active, &zErrMsg);
+
+
 
 	const char* lname = gtk_entry_get_text(GTK_ENTRY(lastname));
 	const char* fname = gtk_entry_get_text(GTK_ENTRY(firstname));
@@ -344,15 +426,32 @@ on_savebutton_clicked                  (GtkButton       *button,
 
 		if (rc == 0){
 			rc = sqlite3_exec(db, "select * from gfa;", callback_insert, button, &zErrMsg);
-			sprintf(query, "insert into gfa values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');", lname,fname,str,n,z,c,p,m,e,img,b,w,i,y,ms,wp,wm,we); 
+			sprintf(query, "insert into gfa values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');", lname,fname,str,n,z,c,p,m,e,img,b,w,i,y,ms,wp,wm,we,id); 
 			rc = sqlite3_exec(db, query, NULL, 0, &zErrMsg);
-			rc = sqlite3_exec(db, "select Last_Name,First_Name from gfa ORDER BY Last_Name,First_Name ASC;", callback, button, &zErrMsg);
+			char execute[1024];
+			sprintf(execute, "select Last_Name,First_Name from gfa where Groups = '%s' ORDER BY Last_Name,First_Name ASC", id_active);
+			rc = sqlite3_exec(db, execute, callback, button, &zErrMsg);
 
 		}else{
-			sprintf(query, "UPDATE gfa SET Last_Name = '%s',First_Name = '%s',Street = '%s',No = '%s',Zip = '%s',City = '%s',Phone = '%s',Mobile = '%s', Email = '%s', Image = '%s', Birth = '%s', Web ='%s', Icq = '%s', Yahoo = '%s', Msn = '%s', Workphone = '%s', Workmobile = '%s', Workemail = '%s' WHERE Last_Name = '%s' AND First_Name = '%s';", lname,fname,str,n,z,c,p,m,e,img,b,w,i,y,ms,wp,wm,we,lname,fname);
-			rc = sqlite3_exec(db, query, NULL, 0, &zErrMsg);
+			if(strcmp(activegroupname,"All")==0)
+			{
+				rc = sqlite3_exec(db, "select * from gfa;", callback_insert, button, &zErrMsg);
+				sprintf(query, "UPDATE gfa SET Last_Name = '%s',First_Name = '%s',Street = '%s',No = '%s',Zip = '%s',City = '%s',Phone = '%s',Mobile = '%s', Email = '%s', Image = '%s', Birth = '%s', Web ='%s', Icq = '%s', Yahoo = '%s', Msn = '%s', Workphone = '%s', Workmobile = '%s', Workemail = '%s', Groups = '%s' WHERE Last_Name = '%s' AND First_Name = '%s';", lname,fname,str,n,z,c,p,m,e,img,b,w,i,y,ms,wp,wm,we,id,lname,fname);
+				rc = sqlite3_exec(db, query, NULL, 0, &zErrMsg);
+			
+				rc = sqlite3_exec(db, "select Last_Name,First_Name from gfa ORDER BY Last_Name,First_Name ASC;", callback, button, &zErrMsg);
+			}else{
+				rc = sqlite3_exec(db, "select * from gfa;", callback_insert, button, &zErrMsg);
+				sprintf(query, "UPDATE gfa SET Last_Name = '%s',First_Name = '%s',Street = '%s',No = '%s',Zip = '%s',City = '%s',Phone = '%s',Mobile = '%s', Email = '%s', Image = '%s', Birth = '%s', Web ='%s', Icq = '%s', Yahoo = '%s', Msn = '%s', Workphone = '%s', Workmobile = '%s', Workemail = '%s', Groups = '%s' WHERE Last_Name = '%s' AND First_Name = '%s';", lname,fname,str,n,z,c,p,m,e,img,b,w,i,y,ms,wp,wm,we,id,lname,fname);
+				rc = sqlite3_exec(db, query, NULL, 0, &zErrMsg);
+			
+				char execute[1024];
+				sprintf(execute, "select Last_Name,First_Name from gfa where Groups = '%s' ORDER BY Last_Name,First_Name ASC;", id_active);
+				rc = sqlite3_exec(db, execute, callback, button, &zErrMsg);
+			}
 		}	
 		sqlite3_close(db);
+		gtk_combo_box_set_active(GTK_COMBO_BOX(addresscombobox),comboid);		
 	} 
 }
 
@@ -379,9 +478,23 @@ on_mainwindow_realize                  (GtkWidget       *widget,
 	rc = sqlite3_open(dbfile,&db);
 	rc = sqlite3_exec(db, "CREATE TABLE IF NOT EXISTS gfa(Last_Name char(50), First_Name char(50), Street char(100), No char(10), Zip char(10), City char(50), Phone char(30), Mobile char(30), Email char(200), Image char(1024), Birth char(30), Web char(200), Icq char(20), Yahoo char(20), Msn char(50), Workphone char(30), Workmobile char(30), Workemail char(200)) ;", NULL, 0, &zErrMsg);
 
+	rc = sqlite3_exec(db, "CREATE TABLE IF NOT EXISTS gfa_groups(group_id INTEGER PRIMARY KEY AUTOINCREMENT, group_name char(100));", NULL, 0, &zErrMsg);
+
+	rc = sqlite3_exec(db,"insert into gfa_groups (group_id,group_name) values('1','General');",NULL,0,&zErrMsg);
 	rc = sqlite3_exec(db, "SELECT * FROM gfa;",oldcheck,db,&zErrMsg);
+	rc = sqlite3_exec(db,"alter table gfa add column Groups INTEGER DEFAULT '1';", NULL, 0, &zErrMsg);
 
 	rc = sqlite3_exec(db, "select Last_Name,First_Name from gfa ORDER BY Last_Name,First_Name ASC;", callback, widget, &zErrMsg);
+	
+	GtkWidget* combo = lookup_widget(widget, "groupcombobox");
+	gtk_combo_box_append_text(GTK_COMBO_BOX(combo),"All");
+	gtk_combo_box_set_active(GTK_COMBO_BOX(combo),0);
+	rc = sqlite3_exec(db, "select group_name from gfa_groups;", callback_group, combo, &zErrMsg);
+
+	GtkWidget* combogroup = lookup_widget(combo, "comboboxgroup");
+	gtk_combo_box_set_active(GTK_COMBO_BOX(combogroup),0);
+
+	
 	sqlite3_close(db);
 	
 	GtkWidget* label = lookup_widget(widget, "url");
@@ -457,6 +570,8 @@ on_deletebutton_clicked                (GtkButton       *button,
 		GtkWidget* workmobile = lookup_widget(GTK_WIDGET(button), "workmobileentry");
 		GtkWidget* workemail = lookup_widget(GTK_WIDGET(button), "workemailentry");
 		GtkWidget* image = lookup_widget(GTK_WIDGET(button), "buddy");
+		GtkWidget* groupcombo = lookup_widget(GTK_WIDGET(button), "comboboxgroup");
+
 	
 		gtk_entry_set_text(GTK_ENTRY(lastname),"");
 		gtk_entry_set_text(GTK_ENTRY(firstname),"");
@@ -477,6 +592,8 @@ on_deletebutton_clicked                (GtkButton       *button,
 		gtk_entry_set_text(GTK_ENTRY(workphone),"");
 		gtk_entry_set_text(GTK_ENTRY(workmobile),"");
 		gtk_entry_set_text(GTK_ENTRY(workemail),"");
+		gtk_combo_box_set_active(GTK_COMBO_BOX(groupcombo),0);
+
 		}	
 		sqlite3_close(db);
 		break;
@@ -502,6 +619,7 @@ on_newbutton_clicked                   (GtkButton       *button,
                                         gpointer         user_data)
 {
 	GtkWidget* combo = lookup_widget(GTK_WIDGET(button), "addresscombobox");
+	GtkWidget* groupcombo = lookup_widget(GTK_WIDGET(button), "comboboxgroup");
 	GtkWidget* lastname = lookup_widget(GTK_WIDGET(button), "lastnameentry");
 	GtkWidget* firstname = lookup_widget(GTK_WIDGET(button), "firstnameentry");
 	GtkWidget* street = lookup_widget(GTK_WIDGET(button), "streetentry");
@@ -541,8 +659,10 @@ on_newbutton_clicked                   (GtkButton       *button,
 	gtk_entry_set_text(GTK_ENTRY(workphone),"");
 	gtk_entry_set_text(GTK_ENTRY(workmobile),"");
 	gtk_entry_set_text(GTK_ENTRY(workemail),"");
-		
+
 	gtk_combo_box_set_active(GTK_COMBO_BOX(combo),-1);
+	gtk_combo_box_set_active(GTK_COMBO_BOX(groupcombo),0);
+
 }
 
 
@@ -675,5 +795,316 @@ on_datebutton_clicked                  (GtkButton       *button,
                     button);
 
 	gtk_dialog_run (GTK_DIALOG(date));
+}
+
+
+void
+on_group1_activate                     (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+
+}
+
+
+static int callback_insert_group(void *groupcombo, int argc, char **argv, char **azColName)
+{
+  GtkWidget* combo = (GtkWidget*) groupcombo;
+  GtkWidget* combogroup = lookup_widget(combo, "comboboxgroup");
+
+  int i;
+  for(i=0;i<argc;i++)
+  {
+	  gtk_combo_box_remove_text (GTK_COMBO_BOX(combo), i);
+	  gtk_combo_box_remove_text (GTK_COMBO_BOX(combogroup), i);
+  }
+
+  return 0;
+}
+
+static int callback_change_group(void *addresscombo, int argc, char **argv, char **azColName)
+{
+  GtkWidget* combo = (GtkWidget*) addresscombo;
+  
+  int i;
+  for(i=0;i<argc;i++)
+  {
+	  gtk_combo_box_remove_text (GTK_COMBO_BOX(combo), i);
+  }
+  return 0;
+}
+
+
+void
+on_new_group_activate                  (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+	GtkWidget* group = create_dialog4();
+	int result = gtk_dialog_run (GTK_DIALOG(group));
+
+	sqlite3 *db;
+	int rc;
+	char *zErrMsg = 0;
+
+	if(result == GTK_RESPONSE_OK)
+	{
+	
+		char* home = getenv("HOME");
+			
+		char path[1024];
+		sprintf(path,"%s/.gfa", home);
+		
+		char filename[1024];
+		sprintf(filename, "%s/gfa.db",path);
+	
+		rc = sqlite3_open(filename, &db);
+	
+		GtkWidget* groupname = lookup_widget(GTK_WIDGET(group), "groupentry");
+		const char* gname = gtk_entry_get_text(GTK_ENTRY(groupname));
+		
+		GtkWidget* groupcombo = lookup_widget(GTK_WIDGET(menuitem), "groupcombobox");
+		GtkWidget* combogroup = lookup_widget(GTK_WIDGET(menuitem), "comboboxgroup");
+		int id = gtk_combo_box_get_active(GTK_COMBO_BOX(groupcombo));
+		int group_id =  gtk_combo_box_get_active(GTK_COMBO_BOX(combogroup));
+		gtk_combo_box_remove_text (GTK_COMBO_BOX(groupcombo), 0);
+		rc = sqlite3_exec(db, "select * from gfa_groups;", callback_insert_group, groupcombo, &zErrMsg);
+
+		char groupbuffer[1024];
+		sprintf(groupbuffer, "insert into gfa_groups (group_name) values('%s');", gname);	
+		rc = sqlite3_exec(db, groupbuffer, NULL, 0, &zErrMsg);
+		gtk_combo_box_append_text(GTK_COMBO_BOX(groupcombo),"All");
+		rc = sqlite3_exec(db, "select group_name from gfa_groups;", callback_group, groupcombo, &zErrMsg);
+
+		gtk_combo_box_set_active(GTK_COMBO_BOX(groupcombo),id);
+		gtk_combo_box_set_active(GTK_COMBO_BOX(combogroup),group_id);
+	}
+	gtk_widget_destroy (group);
+
+	sqlite3_close(db);
+
+
+}
+
+
+void
+on_rename_group_activate               (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+	GtkWidget* groupcombo = lookup_widget(GTK_WIDGET(menuitem), "groupcombobox");
+	GtkWidget* combogroup = lookup_widget(GTK_WIDGET(menuitem), "comboboxgroup");
+	int id = gtk_combo_box_get_active(GTK_COMBO_BOX(groupcombo));
+	int group_id =  gtk_combo_box_get_active(GTK_COMBO_BOX(combogroup));
+	const char* groupname = gtk_combo_box_get_active_text(GTK_COMBO_BOX(groupcombo));
+
+	if(strcmp(groupname,"All") == 0 || strcmp(groupname,"General") == 0  ){
+		GtkWidget* info = create_dialog6();
+		gtk_dialog_run (GTK_DIALOG(info));
+		gtk_widget_destroy (info);
+	}else{
+		GtkWidget* group = create_dialog5();		
+		GtkWidget* entry = lookup_widget(GTK_WIDGET(group), "entry1");
+		gtk_entry_set_text(GTK_ENTRY(entry), groupname);
+		gtk_editable_select_region(GTK_EDITABLE(entry),0,-1);
+
+		int result = gtk_dialog_run (GTK_DIALOG(group));
+
+		sqlite3 *db;
+		int rc;
+		char *zErrMsg = 0;
+	
+		if(result == GTK_RESPONSE_OK)
+		{
+			char* home = getenv("HOME");
+					
+			char path[1024];
+			sprintf(path,"%s/.gfa", home);
+		
+			char filename[1024];
+			sprintf(filename, "%s/gfa.db",path);
+			
+			rc = sqlite3_open(filename, &db);
+
+
+			const char* newname = gtk_entry_get_text(GTK_ENTRY(entry));
+			rc = sqlite3_exec(db, "select * from gfa_groups;", callback_insert_group, groupcombo, &zErrMsg);
+
+			char group[1024];
+			sprintf(group, "UPDATE gfa_groups SET group_name = '%s' WHERE group_name = '%s';", newname, groupname);
+			rc = sqlite3_exec(db, group, NULL, 0, &zErrMsg);
+			gtk_combo_box_append_text(GTK_COMBO_BOX(groupcombo),"All");
+			rc = sqlite3_exec(db, "select group_name from gfa_groups;", callback_group, groupcombo, &zErrMsg);
+			sqlite3_close(db);
+			gtk_combo_box_set_active(GTK_COMBO_BOX(groupcombo),id);
+			gtk_combo_box_set_active(GTK_COMBO_BOX(combogroup),group_id);
+
+
+		}
+		gtk_widget_destroy (group);
+	}
+}
+
+void
+on_delete_group_activate               (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+	GtkWidget* groupcombo = lookup_widget(GTK_WIDGET(menuitem), "groupcombobox");
+	GtkWidget* combogroup = lookup_widget(GTK_WIDGET(menuitem), "comboboxgroup");
+	GtkWidget* addresscombo = lookup_widget(GTK_WIDGET(menuitem), "addresscombobox");
+	const char* groupname = gtk_combo_box_get_active_text(GTK_COMBO_BOX(groupcombo));
+
+	if(strcmp(groupname,"All") == 0 || strcmp(groupname,"General") == 0  ){
+		GtkWidget* info = create_dialog7();
+		gtk_dialog_run (GTK_DIALOG(info));
+		gtk_widget_destroy (info);
+	}else{
+		sqlite3 *db;
+		int rc;
+		char *zErrMsg = 0;
+
+		char* home = getenv("HOME");
+					
+		char path[1024];
+		sprintf(path,"%s/.gfa", home);
+		
+		char filename[1024];
+		sprintf(filename, "%s/gfa.db",path);
+		
+		rc = sqlite3_open(filename, &db);
+	 	char id[1024];
+		
+		char id_request[1024];
+		sprintf(id_request, "select group_id from gfa_groups where group_name = '%s';", groupname);
+		rc = sqlite3_exec(db, id_request, callback_id, &id, &zErrMsg);
+
+		GtkWidget* dialog = create_dialog8();
+		int result = gtk_dialog_run (GTK_DIALOG(dialog));
+		if (result == 1) //delete all contacts
+		{
+			char delete_contacts[1024];
+			sprintf(delete_contacts, "DELETE FROM gfa WHERE Groups = '%s';", id);
+			sqlite3_exec(db,delete_contacts,NULL,0,&zErrMsg);
+
+			rc = sqlite3_exec(db, "select * from gfa_groups;", callback_insert_group, groupcombo, &zErrMsg);
+			gtk_combo_box_append_text(GTK_COMBO_BOX(groupcombo),"All");
+
+			char delete_group[1024];
+			sprintf(delete_group, "DELETE FROM gfa_groups WHERE group_id = '%s';", id);
+			sqlite3_exec(db,delete_group,NULL,0,&zErrMsg);
+
+			rc = sqlite3_exec(db, "select group_name from gfa_groups;", callback_group, groupcombo, &zErrMsg);
+			sqlite3_close(db);
+			gtk_combo_box_set_active(GTK_COMBO_BOX(groupcombo),0);
+			gtk_combo_box_set_active(GTK_COMBO_BOX(combogroup),0);
+			gtk_combo_box_set_active(GTK_COMBO_BOX(addresscombo),-1);
+		}
+
+		if ( result == 0 ) //move all contacts to general
+		{
+			char group[1024];
+			sprintf(group, "UPDATE gfa SET Groups = '1' WHERE Groups = '%s';", id);
+			rc = sqlite3_exec(db, group, NULL, 0, &zErrMsg);
+
+			rc = sqlite3_exec(db, "select * from gfa_groups;", callback_insert_group, groupcombo, &zErrMsg);
+			gtk_combo_box_append_text(GTK_COMBO_BOX(groupcombo),"All");
+
+			char delete_group[1024];
+			sprintf(delete_group, "DELETE FROM gfa_groups WHERE group_id = '%s';", id);
+			sqlite3_exec(db,delete_group,NULL,0,&zErrMsg);
+
+			rc = sqlite3_exec(db, "select group_name from gfa_groups;", callback_group, groupcombo, &zErrMsg);
+			sqlite3_close(db);
+			gtk_combo_box_set_active(GTK_COMBO_BOX(groupcombo),0);
+			gtk_combo_box_set_active(GTK_COMBO_BOX(combogroup),0);
+			gtk_combo_box_set_active(GTK_COMBO_BOX(addresscombo),-1);
+		}
+		gtk_widget_destroy(dialog);
+	}
+}
+
+
+void
+on_groupcombobox_changed               (GtkComboBox     *combobox,
+                                        gpointer         user_data)
+{
+	GtkWidget* addresscombo = lookup_widget(GTK_WIDGET(combobox), "addresscombobox");
+	const char* groupname = gtk_combo_box_get_active_text(GTK_COMBO_BOX(combobox));
+
+	sqlite3 *db;
+	int rc;
+	char *zErrMsg = 0;
+	
+	char* home = getenv("HOME");
+						
+	char path[1024];
+	sprintf(path,"%s/.gfa", home);
+			
+	char filename[1024];
+	sprintf(filename, "%s/gfa.db",path);
+			
+	rc = sqlite3_open(filename, &db);
+
+	if(strcmp(groupname,"All") == 0 )
+	{
+		char contacts[1024];
+		rc = sqlite3_exec(db, "select * from gfa;", callback_change_group, addresscombo, &zErrMsg);
+		rc = sqlite3_exec(db, "select * from gfa ORDER BY Last_Name,First_Name ASC;", callback_change, addresscombo, &zErrMsg);
+	}else{
+		char id[1024];
+		
+		char id_request[1024];
+		sprintf(id_request, "select group_id from gfa_groups where group_name = '%s';", groupname);
+		rc = sqlite3_exec(db, id_request, callback_id, &id, &zErrMsg);
+	
+		char contacts[1024];
+		rc = sqlite3_exec(db, "select * from gfa;", callback_change_group, addresscombo, &zErrMsg);
+	
+		sprintf(contacts, "select * from gfa where Groups = '%s' ORDER BY Last_Name,First_Name ASC;",id);
+		rc = sqlite3_exec(db, contacts, callback_change, addresscombo, &zErrMsg);
+	}
+
+	sqlite3_close(db);
+
+	GtkWidget* lastname = lookup_widget(GTK_WIDGET(combobox), "lastnameentry");
+	GtkWidget* firstname = lookup_widget(GTK_WIDGET(combobox), "firstnameentry");
+	GtkWidget* street = lookup_widget(GTK_WIDGET(combobox), "streetentry");
+	GtkWidget* no = lookup_widget(GTK_WIDGET(combobox), "noentry");
+	GtkWidget* zip = lookup_widget(GTK_WIDGET(combobox), "zipentry");
+	GtkWidget* city = lookup_widget(GTK_WIDGET(combobox), "cityentry");
+	GtkWidget* phone = lookup_widget(GTK_WIDGET(combobox), "phoneentry");
+	GtkWidget* mobile = lookup_widget(GTK_WIDGET(combobox), "mobileentry");
+	GtkWidget* email = lookup_widget(GTK_WIDGET(combobox), "emailentry");
+	GtkWidget* label = lookup_widget(GTK_WIDGET(combobox), "url");
+	GtkWidget* birth = lookup_widget(GTK_WIDGET(combobox), "birthdateentry");
+	GtkWidget* web = lookup_widget(GTK_WIDGET(combobox), "webentry");
+	GtkWidget* icq = lookup_widget(GTK_WIDGET(combobox), "icqentry");
+	GtkWidget* yahoo = lookup_widget(GTK_WIDGET(combobox), "yahooentry");
+	GtkWidget* msn = lookup_widget(GTK_WIDGET(combobox), "msnentry");
+	GtkWidget* workphone = lookup_widget(GTK_WIDGET(combobox), "workphoneentry");
+	GtkWidget* workmobile = lookup_widget(GTK_WIDGET(combobox), "workmobileentry");
+	GtkWidget* workemail = lookup_widget(GTK_WIDGET(combobox), "workemailentry");
+	GtkWidget* image = lookup_widget(GTK_WIDGET(combobox), "buddy");
+	GtkWidget* groupcombo = lookup_widget(GTK_WIDGET(combobox), "comboboxgroup");
+	
+	gtk_entry_set_text(GTK_ENTRY(lastname),"");
+	gtk_entry_set_text(GTK_ENTRY(firstname),"");
+	gtk_entry_set_text(GTK_ENTRY(street),"");
+	gtk_entry_set_text(GTK_ENTRY(no),"");
+	gtk_entry_set_text(GTK_ENTRY(zip),"");
+	gtk_entry_set_text(GTK_ENTRY(city),"");
+	gtk_entry_set_text(GTK_ENTRY(phone),"");
+	gtk_entry_set_text(GTK_ENTRY(mobile),"");
+	gtk_entry_set_text(GTK_ENTRY(email),"");
+	gtk_label_set_text(GTK_LABEL(label),"/usr/share/gfa/pixmaps/person.png");
+	gtk_image_set_from_file(GTK_IMAGE(image),"/usr/share/gfa/pixmaps/person.png");
+	gtk_entry_set_text(GTK_ENTRY(birth),"");
+	gtk_entry_set_text(GTK_ENTRY(web),"");
+	gtk_entry_set_text(GTK_ENTRY(icq),"");
+	gtk_entry_set_text(GTK_ENTRY(yahoo),"");
+	gtk_entry_set_text(GTK_ENTRY(msn),"");
+	gtk_entry_set_text(GTK_ENTRY(workphone),"");
+	gtk_entry_set_text(GTK_ENTRY(workmobile),"");
+	gtk_entry_set_text(GTK_ENTRY(workemail),"");
+	gtk_combo_box_set_active(GTK_COMBO_BOX(groupcombo),0);
+
+	gtk_combo_box_set_active(GTK_COMBO_BOX(addresscombo),-1);
 }
 

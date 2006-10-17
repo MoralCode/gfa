@@ -9,3 +9,8 @@ GtkWidget* create_aboutdialog1 (void);
 GtkWidget* create_dialog3 (void);
 GtkWidget* create_filechooserdialog (void);
 GtkWidget* create_caldialog (void);
+GtkWidget* create_dialog4 (void);
+GtkWidget* create_dialog5 (void);
+GtkWidget* create_dialog6 (void);
+GtkWidget* create_dialog7 (void);
+GtkWidget* create_dialog8 (void);
