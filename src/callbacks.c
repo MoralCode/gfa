@@ -424,14 +424,24 @@ on_savebutton_clicked                  (GtkButton       *button,
 		rc = sqlite3_exec(db, check, check_insert, 0, &zErrMsg);
 		char query[1024];
 
-		if (rc == 0){
-			rc = sqlite3_exec(db, "select * from gfa;", callback_insert, button, &zErrMsg);
-			sprintf(query, "insert into gfa values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');", lname,fname,str,n,z,c,p,m,e,img,b,w,i,y,ms,wp,wm,we,id); 
-			rc = sqlite3_exec(db, query, NULL, 0, &zErrMsg);
-			char execute[1024];
-			sprintf(execute, "select Last_Name,First_Name from gfa where Groups = '%s' ORDER BY Last_Name,First_Name ASC", id_active);
-			rc = sqlite3_exec(db, execute, callback, button, &zErrMsg);
-
+		if (rc == 0)
+		{
+			if(strcmp(activegroupname,"All")==0)
+			{
+				rc = sqlite3_exec(db, "select * from gfa;", callback_insert, button, &zErrMsg);
+				sprintf(query, "insert into gfa values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');", lname,fname,str,n,z,c,p,m,e,img,b,w,i,y,ms,wp,wm,we,id); 
+				rc = sqlite3_exec(db, query, NULL, 0, &zErrMsg);
+				char execute[1024];
+				sprintf(execute, "select Last_Name,First_Name from gfa ORDER BY Last_Name,First_Name ASC", id_active);
+				rc = sqlite3_exec(db, execute, callback, button, &zErrMsg);
+			}else{
+				rc = sqlite3_exec(db, "select * from gfa;", callback_insert, button, &zErrMsg);
+				sprintf(query, "insert into gfa values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');", lname,fname,str,n,z,c,p,m,e,img,b,w,i,y,ms,wp,wm,we,id); 
+				rc = sqlite3_exec(db, query, NULL, 0, &zErrMsg);
+				char execute[1024];
+				sprintf(execute, "select Last_Name,First_Name from gfa where Groups = '%s' ORDER BY Last_Name,First_Name ASC", id_active);
+				rc = sqlite3_exec(db, execute, callback, button, &zErrMsg);	
+			}
 		}else{
 			if(strcmp(activegroupname,"All")==0)
 			{
